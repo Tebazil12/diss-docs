@@ -1,0 +1,105 @@
+\documentclass[titlepage 12pt]{article}
+\textwidth = 450pt
+\oddsidemargin = 5pt
+\textheight = 650pt
+\voffset = -40pt
+
+%-------------------------Packages-----------------------------------------%
+
+\usepackage{titling}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{sectsty}
+\setcounter{secnumdepth}{0}
+\usepackage[labelfont=bf]{caption}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{minted}
+
+\setcitestyle{square}
+
+%-------------------------Titles-------------------------------------------%
+
+\sectionfont{\fontsize{12}{11}\selectfont\underline\sffamily}
+\subsectionfont{\fontsize{12}{11}\selectfont\underline\normalfont\sffamily}
+\subsubsectionfont{\fontsize{10}{11}\selectfont\underline\normalfont\sffamily}
+
+\setlength{\droptitle}{10em} 
+\title{Backpackable Robot Boat for Sonar Surveys\\ Outline Project Specification\\ CS39440}
+\author{ Elizabeth Stone (eas12)\\FH56 Space Science and Robotics\\ \\Supervisor: Mark Neal (mjn) }
+\date{Revision 0.1 - Draft\\ \today\vspace{-3em} }
+
+%------------------------Headers and footers-------------------------------%
+
+\usepackage{fancyhdr}
+ 
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{{\fontfamily{cmss}\selectfont Elizabeth Stone (eas12)}}
+\lhead{{\fontfamily{cmss}\selectfont Outline Project Specification}}
+\rfoot{{\fontfamily{cmss}\selectfont Page \thepage}}
+ 
+%-------------------------Title Page---------------------------------------%
+
+\begin{document}
+{\fontfamily{cmss}
+\selectfont
+
+
+\begin{titlepage}
+	\clearpage\maketitle
+\thispagestyle{empty}
+	 \vspace{250pt}
+
+%\section*{Abstract}
+%	This report investigates the two and three body problem.
+	
+\end{titlepage}
+
+%-----------------------Main Text------------------------------------------%
+
+%\tableofcontents
+
+%\tableofcontents
+
+%\newpage
+
+\section{Project Description}
+
+The AqASS (Aquatic Area Scanning System) project will produce a control system for a small, lightweight, motorpowered robotic boat to enable the boat to autonomously scan any given body of water, with selectable parameters. 
+
+Academics at Aberystwyth University Geography department studied Scottish lochs two and a half years ago using a  lightweight remote control boat. The study required the boat to scan the lochs using sonar sensors to build up an image of the bottom of the lochs and to locate logs on the loch floor (in order to investigate climate change using dendrochronology)\cite{rbates14}. In that study, the boat was controlled by RC. This project aims to make the boat fully autonamous in order to increase efficiency.
+
+"We have a number of low-cost "backpackable" polystyrene boats that are propelled by propellor and on-board batteries. One of these was used in Scotland with a radio-control system to look for submerged logs in upland lochs (see http://geophysicistatlarge.blogspot.co.uk/search/label/dendrochronology)\cite{rbates14}. This project aims to produce a more sophisticated on-board control system that can autonomously drive the boat around bodies of water collecting sonar data. The onboard system will require something like a RaspberryPi and sensors such as GPS and compass and the ability to control rudder servos and motors. Part of the project will be to develop a detailed specification and to select appropriate technologies (in consultation with me). Significant help will be available for the electronics and hardware parts of the project." \cite{mmp}
+     blah blah\cite{SDOimg}
+     
+Suitable development methodologies will need to be investigated early on in this project.
+
+\section{Proposed Tasks}
+
+
+\section{Deliverables}  
+- boat that can follow straight line
+- boat that can follow series of straight lines
+- system to select area of water to scan
+- system to automatically select best/most efficient course for boat (depending on shape of body of water, current direction etc) to scan area
+- way of selecting resolution of scanned area (how close each track of line is to eachother, spead of travel etc) 
+- easy to use interface to get area onto boat and information back
+- options for rc to use- like heading holding, station keeping, return home defaults
+- obstical/collision avoidance (eg shore, objects in water)
+    - maybe with manual entry of objects too
+- control sytem that can be used on other similar boats, with different drivers.(?)
+
+%------------------------Bibliography--------------------------------------%    
+    
+\newpage
+\raggedright
+\addcontentsline{toc}{section}{References}
+\bibliographystyle{ieeetr}
+\bibliography{project-specs.bib} 
+
+}
+\end{document}
+
+
+
