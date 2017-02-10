@@ -95,30 +95,17 @@ citestyle=numeric
 
 \section{Project Description}
 
-The AqASS (Aquatic Area Scanning System) project will produce a control system for a small, lightweight, motorpowered robotic boat to enable the boat to autonomously scan any given body of water, with selectable parameters. 
+The AqASS (Aquatic Area Scanning System) project will produce a control system for a small, lightweight, motor-powered robotic boat to enable the boat to autonomously scan any given body of water, with selectable parameters. 
 
-Academics at Aberystwyth University Geography department studied Scottish lochs two and a half years ago using a  lightweight remote control boat. The study required the boat to scan the lochs using sonar sensors to build up an image of the bottom of the lochs and to locate logs on the loch floor (in order to investigate climate change using dendrochronology)\cite{rbates14}. In that study, the boat was controlled by RC. This project aims to make the boat fully autonamous in order to increase efficiency.
+Academics at Aberystwyth University Geography department studied Scottish lochs two and a half years ago using a  lightweight remote control boat. The study required the boat to scan the lochs using sonar sensors to build up an image of the bottom of the lochs and to locate logs on the loch floor (in order to investigate climate change using dendrochronology)\cite{rbates14}. In that study, the boat was controlled by RC. This project aims to make the boat fully autonomous in order to increase efficiency.
 
-The most basic aim for this project is to develop code to make the boat travel in a straight line towards a selected location on a body of water. This can then be built upon to make the boat travel to a series of waypoints.
+The most basic aim for this project is to develop code to make the boat travel in a straight line towards a selected location on a body of water. This can then be built upon to make the boat travel to a series of way-points.
 
 Building on this, the project will then develop an algorithm for automatically selecting the most efficient course for boat to take to scan a selected area (as defined by a series of coordinates). 
 
 It will then investigate telemetry and the design of a user interface that allows the user to communicate with the boat while it is on the water, and easily select the route the user wishes the robot to take. 
-%\begin{itemize}
-%\item boat that can follow straight line
-%\item boat that can follow series of straight lines
-%\item system to select area of water to scan
-%\item system to automatically select best/most efficient course for boat () to scan area
-%\item way of selecting resolution of scanned area (how close each track of line is to eachother, spead of travel etc) 
-%\item easy to use interface to get area onto boat and information back
-%\item options for rc to use- like heading holding, station keeping, return home defaults
-%\item obstical/collision avoidance (eg shore, objects in water)
-%    - maybe with manual entry of objects too
-%\item control sytem that can be used on other similar boats, with different drivers.(?)
-%\end{itemize}
 
-%"We have a number of low-cost "backpackable" polystyrene boats that are propelled by propellor and on-board batteries. One of these was used in Scotland with a radio-control system to look for submerged logs in upland lochs (see http://geophysicistatlarge.blogspot.co.uk/search/label/dendrochronology)\cite{rbates14}. This project aims to produce a more sophisticated on-board control system that can autonomously drive the boat around bodies of water collecting sonar data. The onboard system will require something like a RaspberryPi and sensors such as GPS and compass and the ability to control rudder servos and motors. Part of the project will be to develop a detailed specification and to select appropriate technologies (in consultation with me). Significant help will be available for the electronics and hardware parts of the project." 
-\cite{mmp}
+It may also be useful to investigate semi-autonomous functions that can be used on the boat before and after starting the area scanning, such as heading holding, station keeping or return home functions, to aid in deployment of the system.
           
 Suitable development methodologies will need to be investigated early on in this project.
 
@@ -129,20 +116,20 @@ The following tasks are proposed:
 
 \item \textbf{RC Lake Tests and environment research.} Investigate the environment encountered by the boats and the factors that affect their motion on the water (e.g. current, wind, waves), and what can be done to detect and account for them.
 
-\item \textbf{Invistigate OS and programming languages.} Research which languages are most suitable for the hardware given, and which OS would be best to use on the Pi (if any). 
+\item \textbf{Investigate OS and programming languages.} Research which languages are most suitable for the hardware given, and which OS would be best to use on the Pi (if any). 
 
 \item \textbf{Control System Development} 
 	\begin{itemize}
-	\item \textbf{Investigate types of navigation systems.} Research types of system and see which type is most suitable for this project (vector feild systems, bearing systems etc). 
-	\item \textbf{Investigate Control System Architectures} See which design would be best for this type of project. It may be that a modular approach will be neccisary, which would allow easy swapping of hardware.
-	\item \textbf{Write code to get boat to travel in a straight line to a waypoint/series of waypoints.} This will involve accounting for factors discovered during rc testing.
-	\item \textbf{Investigate ways of representing and specifying body of water to be scanned and develop an algorithm to determine the most efficient route to scan the given area.} Specifying the body may be as simple as manualy entering the data points, or as advanced as having a GUI where the user may draw the outline of the water on a map.The algorithm will likely depend on the shape of the body of water, current direction and other factors. It should also consider parameters such as desired resolution of scan (which would depend upon the sonar sample rate, speed of boat, and spacing of consecutive traversals of the area).
-	\item \textbf{Research and Develop Telemetary System} Develop easy to use interface to pass information to and from boat. Investigate if long distance comms would be useful and viable.
-	\item \textbf{Investigate plausability of (and implement) collision avoidance system.} A system to prevent the boat from traveling into shallow waters, or crashing into objects in its path (e.g. other boats, bouys). This may involve proccessing the data from the sonar scanner(s), thus research will need to be done into how to procces this data. It may also be nessisary to develop a modular system so that sonar device may be swapped easily for another similar device.
+	\item \textbf{Investigate types of navigation systems.} Research types of system and see which type is most suitable for this project (vector field systems, bearing systems etc). 
+	\item \textbf{Investigate Control System Architectures} See which design would be best for this type of project. It may be that a modular approach will be necessary, which would allow easy swapping of hardware.
+	\item \textbf{Write code to get boat to travel in a straight line to a way-point/series of way-points.} This will involve accounting for factors discovered during rc testing.
+	\item \textbf{Investigate ways of representing and specifying body of water to be scanned and develop an algorithm to determine the most efficient route to scan the given area.} Specifying the body may be as simple as manually entering the data points, or as advanced as having a GUI where the user may draw the outline of the water on a map.The algorithm will likely depend on the shape of the body of water, current direction and other factors. It should also consider parameters such as desired resolution of scan (which would depend upon the sonar sample rate, speed of boat, and spacing of consecutive traversals of the area).
+	\item \textbf{Research and Develop Telemetry System} Develop easy to use interface to pass information to and from boat. Investigate if long distance communications would be useful and viable.
+	\item \textbf{Investigate plausibility of (and implement) collision avoidance system.} A system to prevent the boat from travelling into shallow waters, or crashing into objects in its path (e.g. other boats, buoys). This may involve processing the data from the sonar scanner(s), thus research will need to be done into how to process this data. It may also be necessary to develop a modular system so that sonar device may be swapped easily for another similar device.
 	\end{itemize}
 
 \item \textbf{Test control system} The methodology used will define the frequency of testing, but tests on one or more large bodies of water would be ideal nearer the end of the project. On land tests will be carried out throughout the rest of the project.
-\item \textbf{Project Meetings and Project Diary} Weekly project meetings will be held with the supervisor, and a project diary will be kept to keep track of all parts of the project. The diary will be written in LaTeX and backups will be kept in a git repository.
+\item \textbf{Project Meetings and Project Diary} Weekly project meetings will be held with the supervisor, and a project diary will be kept to keep track of all parts of the project. The diary will be written in markdown and backups will be kept in a git repository.
 \item \textbf{Demonstrations}
 \end{itemize}
 
@@ -153,8 +140,8 @@ The following tasks are proposed:
 Deliverables expected from this project: 
 \begin{itemize}
 	\item Mid-project demonstration
-	\item control system software
-	\item User interface and telemetry software
+	\item Control system software
+	\item Usable user interface and telemetry software
 	\item Collision avoidance software
 	\item Final report
 	\item Final demonstration
