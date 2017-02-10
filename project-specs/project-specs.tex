@@ -8,15 +8,23 @@
 
 \usepackage{titling}
 \usepackage{graphicx}
-\usepackage{natbib}
+%\usepackage{natbib}
 \usepackage{sectsty}
 \setcounter{secnumdepth}{0}
 \usepackage[labelfont=bf]{caption}
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{minted}
+\usepackage[
+backend=biber,
+style=ieee,
+citestyle=numeric
+]{biblatex}
+ 
+%\addbibresource{project-specs.bib}
+\addbibresource{project-specs.bib} 
 
-\setcitestyle{square}
+%\setcitestyle{square}
 
 %-------------------------Titles-------------------------------------------%
 
@@ -27,7 +35,7 @@
 \setlength{\droptitle}{10em} 
 \title{Backpackable Robot Boat for Sonar Surveys\\ Outline Project Specification\\ CS39440}
 \author{ Elizabeth Stone (eas12)\\FH56 Space Science and Robotics\\ \\Supervisor: Mark Neal (mjn) }
-\date{Revision 0.1 - Draft\\ \today\vspace{-3em} }
+\date{Revision 0.2 - Draft\\ \today\vspace{-3em} }
 
 %------------------------Headers and footers-------------------------------%
 
@@ -70,33 +78,73 @@ The AqASS (Aquatic Area Scanning System) project will produce a control system f
 
 Academics at Aberystwyth University Geography department studied Scottish lochs two and a half years ago using a  lightweight remote control boat. The study required the boat to scan the lochs using sonar sensors to build up an image of the bottom of the lochs and to locate logs on the loch floor (in order to investigate climate change using dendrochronology)\cite{rbates14}. In that study, the boat was controlled by RC. This project aims to make the boat fully autonamous in order to increase efficiency.
 
-"We have a number of low-cost "backpackable" polystyrene boats that are propelled by propellor and on-board batteries. One of these was used in Scotland with a radio-control system to look for submerged logs in upland lochs (see http://geophysicistatlarge.blogspot.co.uk/search/label/dendrochronology)\cite{rbates14}. This project aims to produce a more sophisticated on-board control system that can autonomously drive the boat around bodies of water collecting sonar data. The onboard system will require something like a RaspberryPi and sensors such as GPS and compass and the ability to control rudder servos and motors. Part of the project will be to develop a detailed specification and to select appropriate technologies (in consultation with me). Significant help will be available for the electronics and hardware parts of the project." \cite{mmp}
-     blah blah\cite{SDOimg}
-     
+The most basic aim for this project is to develop code to make the boat travel in a straight line towards a selected location on a body of water. This can then be built upon to make the boat travel to a series of waypoints.
+
+Building on this, the project will then develop an algorithm for automatically selecting the most efficient course for boat to take to scan a selected area (as defined by a series of coordinates). 
+%\begin{itemize}
+%\item boat that can follow straight line
+%\item boat that can follow series of straight lines
+%\item system to select area of water to scan
+%\item system to automatically select best/most efficient course for boat () to scan area
+%\item way of selecting resolution of scanned area (how close each track of line is to eachother, spead of travel etc) 
+%\item easy to use interface to get area onto boat and information back
+%\item options for rc to use- like heading holding, station keeping, return home defaults
+%\item obstical/collision avoidance (eg shore, objects in water)
+%    - maybe with manual entry of objects too
+%\item control sytem that can be used on other similar boats, with different drivers.(?)
+%\end{itemize}
+
+%"We have a number of low-cost "backpackable" polystyrene boats that are propelled by propellor and on-board batteries. One of these was used in Scotland with a radio-control system to look for submerged logs in upland lochs (see http://geophysicistatlarge.blogspot.co.uk/search/label/dendrochronology)\cite{rbates14}. This project aims to produce a more sophisticated on-board control system that can autonomously drive the boat around bodies of water collecting sonar data. The onboard system will require something like a RaspberryPi and sensors such as GPS and compass and the ability to control rudder servos and motors. Part of the project will be to develop a detailed specification and to select appropriate technologies (in consultation with me). Significant help will be available for the electronics and hardware parts of the project." 
+\cite{mmp}
+          
 Suitable development methodologies will need to be investigated early on in this project.
 
 \section{Proposed Tasks}
+The following tasks are proposed:
+\begin{itemize}
+\item \textbf{Investigate Development Methodologies}
+
+\item \textbf{RC Lake Tests and environment research.} Investigate the environment encountered by the boats and the factors that affect their motion on the water (e.g. current, wind, waves), and what can be done to detect and account for them.
+
+\item \textbf{Invistigate OS and programming languages.} Research which languages are most suitable for the hardware given, and which OS would be best to use on the Pi (if any). 
+
+\item \textbf{Control System Development} 
+	\begin{itemize}
+	\item \textbf{Investigate types of navigation systems.} Research types of system and see which type is most suitable for this project (vector feild systems, bearing systems etc). 
+	\item \textbf{Investigate Control System Architectures} See which design would be best for this type of project. It may be that a modular approach will be neccisary, which would allow easy swapping of hardware.
+	\item \textbf{Write code to get boat to travel in a straight line to a waypoint/series of waypoints.} This will involve accounting for factors discovered during rc testing.
+	\item \textbf{Investigate ways of representing and specifying body of water to be scanned and develop an algorithm to determine the most efficient route to scan the given area.} Specifying the body may be as simple as manualy entering the data points, or as advanced as having a GUI where the user may draw the outline of the water on a map.The algorithm will likely depend on the shape of the body of water, current direction and other factors. It should also consider parameters such as desired resolution of scan (which would depend upon the sonar sample rate, speed of boat, and spacing of consecutive traversals of the area).
+	\item \textbf{Research and Develop Telemetary System} Develop easy to use interface to pass information to and from boat. Investigate if long distance comms would be useful and viable.
+	\item \textbf{Investigate plausability of (and implement) collision avoidance system.} A system to prevent the boat from traveling into shallow waters, or crashing into objects in its path (e.g. other boats, bouys). This may involve proccessing the data from the sonar scanner(s), thus research will need to be done into how to procces this data. It may also be nessisary to develop a modular system so that sonar device may be swapped easily for another similar device.
+	\end{itemize}
+
+\item \textbf{Test control system} The methodology used will define the frequency of testing, but tests on one or more large bodies of water would be ideal nearer the end of the project. On land tests will be carried out throughout the rest of the project.
+\item \textbf{Project Meetings and Project Diary} Weekly project meetings will be held with the supervisor, and a project diary will be kept to keep track of all parts of the project. The diary will be written in LaTeX and backups will be kept in a git repository.
+\item \textbf{Demonstrations}
+\end{itemize}
+
+
 
 
 \section{Deliverables}  
-- boat that can follow straight line
-- boat that can follow series of straight lines
-- system to select area of water to scan
-- system to automatically select best/most efficient course for boat (depending on shape of body of water, current direction etc) to scan area
-- way of selecting resolution of scanned area (how close each track of line is to eachother, spead of travel etc) 
-- easy to use interface to get area onto boat and information back
-- options for rc to use- like heading holding, station keeping, return home defaults
-- obstical/collision avoidance (eg shore, objects in water)
-    - maybe with manual entry of objects too
-- control sytem that can be used on other similar boats, with different drivers.(?)
+Deliverables expected from this project: 
+\begin{itemize}
+	\item Mid-project demonstration
+	\item control system software
+	\item telemetry software(?)
+	\item Final report
+	\item final demonstration
+\end{itemize}
+
 
 %------------------------Bibliography--------------------------------------%    
     
 \newpage
 \raggedright
-\addcontentsline{toc}{section}{References}
-\bibliographystyle{ieeetr}
-\bibliography{project-specs.bib} 
+\addcontentsline{toc}{section}{Annotated Bibliography}
+\printbibliography[title={Annotated Bibliography}]
+%\bibliographystyle{ieee}
+
 
 }
 \end{document}
