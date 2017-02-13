@@ -33,8 +33,8 @@ Finish off project outline, visit labs.
 Week 2 - 13/02/2017
 -------------------
 To do:
--[ ] Decide on methodology
--[ ] Decide on type of navigation system to use
--[ ] Decide on control system architecture
--[ ] Acquire basic hardware
--[ ] Start research into best language and operating system to use
+- [ ] Decide on methodology
+- [ ] Decide on type of navigation system to use
+- [ ] Decide on control system architecture
+- [ ] Acquire basic hardware
+- [ ] Start research into best language and operating system to use
