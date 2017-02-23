@@ -33,8 +33,17 @@ Finish off project outline, visit labs.
 Week 2 - 13/02/2017
 -------------------
 To do:
--[ ] Decide on methodology
+-[x] Decide on methodology
+-[x] Acquire basic hardware
+- decide to use FDD methodology
+- basic research into vector field navigation
+
+Week 3 - 20/02/2017
+-------------------
 -[ ] Decide on type of navigation system to use
 -[ ] Decide on control system architecture
--[ ] Acquire basic hardware
--[ ] Start research into best language and operating system to use
+-[x] Start research into best language and operating system to use
+-[ ] More research into/experimentation with language and OS to use
+-[ ] More research into how to use ROS
+- decide to use ROS
+- write simple design spec for hardware
