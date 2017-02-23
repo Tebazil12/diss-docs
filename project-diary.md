@@ -21,16 +21,16 @@ SOFTWARE.-->
 Project Diary
 =============
 
-Week 0 - 30/01/2017
+Week 1 - 30/01/2017
 -------------------
 Intro to project, begin thinking about outline project specification, visit
 labs briefly.
 
-Week 1 - 06/02/2017
+Week 2 - 06/02/2017
 -------------------
 Finish off project outline, visit labs.
 
-Week 2 - 13/02/2017
+Week 3 - 13/02/2017
 -------------------
 To do:
 -[x] Decide on methodology
@@ -38,7 +38,7 @@ To do:
 - decide to use FDD methodology
 - basic research into vector field navigation
 
-Week 3 - 20/02/2017
+Week 4 - 20/02/2017
 -------------------
 -[ ] Decide on type of navigation system to use
 -[ ] Decide on control system architecture
