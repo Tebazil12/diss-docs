@@ -1,0 +1,125 @@
+%Copyright (c) 2017 Lizzie Stone
+%
+%Permission is hereby granted, free of charge, to any person obtaining a copy
+%of this software and associated documentation files (the "Software"), to deal
+%in the Software without restriction, including without limitation the rights
+%to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%copies of the Software, and to permit persons to whom the Software is
+%furnished to do so, subject to the following conditions:
+%
+%The above copyright notice and this permission notice shall be included in all
+%copies or substantial portions of the Software.
+%
+%THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+%SOFTWARE.
+
+
+\documentclass[titlepage 12pt]{article}
+\textwidth = 450pt
+\oddsidemargin = 5pt
+\textheight = 650pt
+\voffset = -40pt
+
+%-------------------------Packages-----------------------------------------%
+
+\usepackage{titling}
+\usepackage{graphicx}
+%\usepackage{natbib}
+\usepackage{sectsty}
+\setcounter{secnumdepth}{0}
+\usepackage[labelfont=bf]{caption}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{minted}
+\usepackage[
+backend=biber,
+style=ieee,
+citestyle=numeric
+]{biblatex}
+ 
+%\addbibresource{project-specs.bib}
+\addbibresource{project-specs.bib} 
+
+%\setcitestyle{square}
+
+%-------------------------Titles-------------------------------------------%
+
+%\chapterfont{\fontsize{14}{11}\selectfont\underline\normalfont\sffamily}
+\sectionfont{\fontsize{12}{11}\selectfont\underline\normalfont\bfseries\sffamily}
+\subsectionfont{\fontsize{12}{11}\selectfont\underline\normalfont\sffamily}
+\subsubsectionfont{\fontsize{10}{11}\selectfont\underline\normalfont\sffamily}
+
+\setlength{\droptitle}{10em} 
+\title{Backpackable Robot Boat for Sonar Surveys\\ Final Report for CS39440 Major Project}
+\author{Author: Elizabeth Stone (eas12)\\Supervisor: Mark Neal (mjn) }
+\date{Version: 1.0 - Draft\\ \today\vspace{-3em} }
+
+%------------------------Headers and footers-------------------------------%
+
+\usepackage{fancyhdr}
+ 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{{\fontfamily{cmss}\selectfont Backpackable Robot Boat for Sonar Surveys}}
+\rhead{{\fontfamily{cmss}\selectfont Final Report}}
+\rfoot{{\fontfamily{cmss}\selectfont Page \thepage}}
+ 
+%-------------------------Title Page---------------------------------------%
+
+\begin{document}
+{\fontfamily{cmss}
+\selectfont
+
+
+\begin{titlepage}
+	\clearpage\maketitle
+\begin{center}
+	\vspace{30pt}
+	This report was submitted as partial fulfilment\\ of a BSc degree in Space Science and Robotics (FH56)
+\end{center}
+	
+\thispagestyle{empty}
+	
+\end{titlepage}
+
+%-----------------------Main Text------------------------------------------%
+
+%declaration of originality
+\include{Acknowledgements}
+\include{Abstract}
+\tableofcontents
+\newpage
+%list of figures
+%list of tables
+\lhead{{\fontfamily{cmss}\selectfont Backpackable Robot Boat for Sonar Surveys}}
+\rhead{{\fontfamily{cmss}\selectfont Background \& Objectives}}
+\include{chapter1/chapter1} 
+\rhead{{\fontfamily{cmss}\selectfont Design}}
+\include{chapter2/chapter2} 
+\rhead{{\fontfamily{cmss}\selectfont Implementation}}
+\include{chapter3/chapter3} 
+\rhead{{\fontfamily{cmss}\selectfont Testing}}
+\include{chapter4/chapter4} 
+\rhead{{\fontfamily{cmss}\selectfont Evaluation}}
+\include{chapter5/chapter5} 
+
+
+
+%------------------------Bibliography--------------------------------------%    
+    
+\newpage
+\raggedright
+\addcontentsline{toc}{section}{Annotated Bibliography}
+\printbibliography[title={Annotated Bibliography}]
+%\bibliographystyle{ieee}
+
+
+}
+\end{document}
+
+
