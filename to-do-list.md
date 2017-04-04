@@ -1,10 +1,8 @@
 To do:
-- [ ] Compass driver
 - [ ] Compass calibration (?)
-- [ ] Motor driver
 - [ ] Motor Calibration
-- [ ] Servo driver
 - [ ] Servo calibration 
+- [ ] Arduino-pi comms
 - [ ] PID tuning
 - [ ] GPS driver
 - [ ] Sonar driver (?)
@@ -15,3 +13,7 @@ To do:
 - [ ] decide on final strategic plan for navigating area
 - [ ] deside on comms protocal between arduino and pi
 
+Done:
+- [x] Compass driver
+- [x] Motor driver
+- [x] Servo driver
