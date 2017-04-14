@@ -41,6 +41,7 @@ backend=biber,
 style=ieee,
 citestyle=numeric
 ]{biblatex}
+\usepackage{datetime}
  
 %\addbibresource{project-specs.bib}
 \addbibresource{project-specs.bib} 
@@ -54,10 +55,10 @@ citestyle=numeric
 \subsectionfont{\fontsize{12}{11}\selectfont\underline\normalfont\sffamily}
 \subsubsectionfont{\fontsize{10}{11}\selectfont\underline\normalfont\sffamily}
 
-\setlength{\droptitle}{10em} 
-\title{Backpackable Robot Boat for Sonar Surveys\\ Final Report for CS39440 Major Project}
+\setlength{\droptitle}{15pt} 
+\title{Area Scanning Control System for \\Back-packable Robot Boats\\ \vspace{10pt}  Report for CS39440 Major Project}
 \author{Author: Elizabeth Stone (eas12)\\Supervisor: Mark Neal (mjn) }
-\date{Version: 1.0 - Draft\\ \today\vspace{-3em} }
+\date{Version: 1.0 - Draft\\ \longdate \today \vspace{-3em} }
 
 %------------------------Headers and footers-------------------------------%
 
@@ -65,7 +66,7 @@ citestyle=numeric
  
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{{\fontfamily{cmss}\selectfont Backpackable Robot Boat for Sonar Surveys}}
+\lhead{{\fontfamily{cmss}\selectfont Area Scanning Control System for Back-packable Robot Boats}}
 \rhead{{\fontfamily{cmss}\selectfont Final Report}}
 \rfoot{{\fontfamily{cmss}\selectfont Page \thepage}}
  
@@ -79,7 +80,9 @@ citestyle=numeric
 \begin{titlepage}
 	\clearpage\maketitle
 \begin{center}
-	\vspace{30pt}
+	\vspace{50pt}
+	\includegraphics[height=4cm]{aberlogo}\\
+	\vspace{40pt}
 	This report was submitted as partial fulfilment\\ of a BSc degree in Space Science and Robotics (FH56)
 \end{center}
 	
