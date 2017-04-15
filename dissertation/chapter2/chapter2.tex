@@ -1,10 +1,23 @@
-
-
 \section{Design}
-
-this is some words
-hello world?
-
 \subsection{Overall Architecture}
-Stuff
+Pi and arduino
 
+\subsection{Hardware}
+Rasperry Pi 3 and Moteino (can be replaced with any arduino, as the wireless
+function of the moteino is not used), with GPS connected to the Pi, and compass,
+motors and rudders attached to the moteino. 
+
+Different designs were considered for the hardware - the gps could be on the arduino or the Pi. On the arduino this has the advantage that PID control could be done faster as the PID loop wouldn't be waiting on comms from the Pi (which would take longer than getting comms straight from the gps), but in this aragement there would be a much larger delay in getting location information to the Pi (which it needs for navigation and matching with gathered data) as the gps location is given as lattitude and longitude in degrees to 6 decimal points
+of accuracy, so 8 numbers would have to be transmitted rather than 2 as would be the case with speed. Thus it was decided to place the gps on the Pi, and for now have the speed not be PID controlled. This is because the use of PID control of the speed would be vastly complex and may not give any advantage (other than to know the boat has travelled at the same pace in different conditions - which may be useful for scientists to know that experiments have be kept under the same conditions, but this is generally of limited value***).
+
+
+
+\subsection{High Level}
+Dei
+
+\subsection{Low Level}
+The low level control is put on the moteino to control the I/O (except for the gps, as explained above***). This is to prevent higher level computations from slowing down the updates of the rudder positions and motor speeds, as PID relies on fast iteration times to be effective***. 
+
+The design is to have a pid controller on the arduino which updates the rudder positions to ensure a smooth path is followed (rather than oscillating).
+
+\subsection{Comms}

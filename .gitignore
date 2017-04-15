@@ -2,6 +2,9 @@
 *.log
 *.toc
 *.aux
+*.out
+*.gif
+*.planner
 _*
 *.bbl
 *.bcf
