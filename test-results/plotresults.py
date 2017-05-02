@@ -5,7 +5,7 @@ import re
 
 #http://www.scipy-lectures.org/intro/matplotlib/auto_examples/plot_quiver_ex.html
 
-loc_file = open("castle-simplescan1/logs-to-vec.csv", "rU") 
+loc_file = open("lake_big/logs-first-vis-vect.csv", "rU") 
 reader = csv.reader(loc_file)
 list_1=[]
 x = []
@@ -14,7 +14,7 @@ b = []
 for i,row in enumerate(reader):
     #print row
     #print i
-    if i%1 == 0:
+    if i%3 == 0:
         if len(row) > 0:
             that = row[2]
             print that
@@ -39,9 +39,9 @@ y_b = np.cos(np.radians(b))
 x_b = np.sin(np.radians(b))
 
 
-plt.quiver(y, x, x_b, y_b,width=0.001,scale=1 / 0.015) #http://matplotlib.org/examples/pylab_examples/quiver_demo.html
+plt.quiver(y, x, x_b, y_b,width=0.002,scale=1 / 0.035) #http://matplotlib.org/examples/pylab_examples/quiver_demo.html
 
-loc_file = open('castle-simplescan1/waypoints.csv', "r") 
+loc_file = open('lake_big/waypoints.csv', "r") 
 reader = csv.reader(loc_file)
 ways_t=[]
 ways_l=[]
