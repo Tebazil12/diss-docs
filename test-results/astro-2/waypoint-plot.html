@@ -1,0 +1,1049 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>logs-vis</title>
+		<base target="_top"></base>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<meta name="geo.position" content="52.4144384; -4.0659235" />
+		<meta name="ICBM" content="52.4144384, -4.0659235" />
+	</head>
+	<body style="margin:0px;">
+		<script type="text/javascript">
+			google_api_key = ''; // Your project's Google Maps API key goes here (https://code.google.com/apis/console)
+			language_code = '';
+			document.writeln('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&amp;libraries=geometry&amp;language='+(self.language_code?self.language_code:'')+'&amp;key='+(self.google_api_key?self.google_api_key:'')+'"><'+'/script>');
+			
+			thunderforest_api_key = ''; // To display OpenStreetMap tiles from ThunderForest, you need a key (http://www.thunderforest.com/docs/apikeys/)
+		</script>
+		
+		<!--
+			If you want to transplant this map into another Web page, by far the best method is to
+			simply include it in a IFRAME tag (see http://www.gpsvisualizer.com/faq.html#google_html).
+			But, if you must paste the code into another page, be sure to include all of these parts:
+			   1. The "div" tags that contain the map and its widgets, below
+			   2. Three sections of JavaScript code:
+			      a. The Google code (maps.google.com or googleapis.com) code, above
+			      b. "gv_options" and the code that calls a .js file on maps.gpsvisualizer.com
+			      c. The "GV_Map" function, which contains all the geographic info for the map
+		-->
+		<div style="margin-left:0px; margin-right:0px; margin-top:0px; margin-bottom:0px;">
+			<div id="gmap_div" style="width:700px; height:700px; margin:0px; margin-right:12px; background-color:#f0f0f0; float:left; overflow:hidden;">
+				<p align="center" style="font:10px Arial;">This map was created using <a target="_blank" href="http://www.gpsvisualizer.com/">GPS Visualizer</a>'s do-it-yourself geographic utilities.<br /><br />Please wait while the map data loads...</p>
+			</div>
+				
+			<div id="gv_infobox" class="gv_infobox" style="font:11px Arial; border:solid #666666 1px; background-color:#ffffff; padding:4px; overflow:auto; display:none; max-width:400px;">
+				<!-- Although GPS Visualizer didn't create an legend/info box with your map, you can use this space for something else if you'd like; enable it by setting gv_options.infobox_options.enabled to true -->
+			</div>
+
+
+
+			<div id="gv_marker_list" class="gv_marker_list" style="background-color:#ffffff; overflow:auto; display:none;"><!-- --></div>
+
+			<div id="gv_clear_margins" style="height:0px; clear:both;"><!-- clear the "float" --></div>
+		</div>
+
+		
+		<!-- begin GPS Visualizer setup script (must come after maps.google.com code) -->
+		<script type="text/javascript">
+			/* Global variables used by the GPS Visualizer functions (20170507062053): */
+			gv_options = {};
+			
+			// basic map parameters:
+			gv_options.center = [52.4144384205,-4.0659235025];  // [latitude,longitude] - be sure to keep the square brackets
+			gv_options.zoom = 18;  // higher number means closer view; can also be 'auto' for automatic zoom/center based on map elements
+			gv_options.map_type = 'GV_HYBRID';  // popular map_type choices are 'GV_STREET', 'GV_SATELLITE', 'GV_HYBRID', 'GV_TERRAIN', 'GV_OSM', 'GV_TOPO_US', 'GV_TOPO_WORLD' (http://www.gpsvisualizer.com/misc/google_map_types.html)
+			gv_options.map_opacity = 1.00;  // number from 0 to 1
+			gv_options.full_screen = true;  // true|false: should the map fill the entire page (or frame)?
+			gv_options.width = 700;  // width of the map, in pixels
+			gv_options.height = 700;  // height of the map, in pixels
+			
+			gv_options.map_div = 'gmap_div';  // the name of the HTML "div" tag containing the map itself; usually 'gmap_div'
+			gv_options.doubleclick_zoom = true;  // true|false: zoom in when mouse is double-clicked?
+			gv_options.doubleclick_center = true;  // true|false: re-center the map on the point that was double-clicked?
+			gv_options.scroll_zoom = true; // true|false; or 'reverse' for down=in and up=out
+			gv_options.autozoom_adjustment = 0;
+			gv_options.centering_options = { 'open_info_window':true, 'partial_match':true, 'center_key':'center', 'default_zoom':null } // URL-based centering (e.g., ?center=name_of_marker&zoom=14)
+			gv_options.tilt = false; // true|false: allow Google to show 45-degree tilted aerial imagery?
+			gv_options.street_view = false; // true|false: allow Google Street View on the map
+			gv_options.animated_zoom = false; // true|false: may or may not work properly
+			gv_options.disable_google_pois = false;  // true|false: if you disable clickable POIs, you also lose the labels on parks, airports, etc.
+				
+			// widgets on the map:
+			gv_options.zoom_control = 'large'; // 'large'|'small'|'none'
+			gv_options.recenter_button = true; // true|false: is there a 'click to recenter' option in the zoom control?
+			gv_options.scale_control = true; // true|false
+			gv_options.map_opacity_control = false;  // true|false: does it appear on the map itself?
+			gv_options.map_type_control = {};  // widget to change the background map
+			  gv_options.map_type_control.visible = true;  // true|false: does it appear on the map itself?
+			  gv_options.map_type_control.filter = false;  // true|false: when map loads, are irrelevant maps ignored?
+			  gv_options.map_type_control.excluded = [];  // comma-separated list of quoted map IDs that will never show in the list ('included' also works)
+			gv_options.center_coordinates = true;  // true|false: show a "center coordinates" box and crosshair?
+			gv_options.measurement_tools = true;  // true|false: does it appear on the map itself?
+			gv_options.measurement_options = { visible:false, distance_color:'', area_color:'' };
+			gv_options.crosshair_hidden = true;  // true|false: hide the crosshair initially?
+			gv_options.mouse_coordinates = false;  // true|false: show a "mouse coordinates" box?
+			gv_options.utilities_menu = { 'maptype':true, 'opacity':true, 'measure':true, 'export':true };
+			gv_options.allow_export = false;  // true|false
+			
+			gv_options.infobox_options = {}; // options for a floating info box (id="gv_infobox"), which can contain anything
+			  gv_options.infobox_options.enabled = true;  // true|false: enable or disable the info box altogether
+			  gv_options.infobox_options.position = ['LEFT_TOP',52,6];  // [Google anchor name, relative x, relative y]
+			  gv_options.infobox_options.draggable = true;  // true|false: can it be moved around the screen?
+			  gv_options.infobox_options.collapsible = true;  // true|false: can it be collapsed by double-clicking its top bar?
+
+			// marker-related options:
+			gv_options.default_marker = { color:'red',icon:'googlemini',scale:1 }; // icon can be a URL, but be sure to also include size:[w,h] and optionally anchor:[x,y]
+			gv_options.vector_markers = false; // are the icons on the map in embedded SVG format?
+			gv_options.marker_tooltips = true; // do the names of the markers show up when you mouse-over them?
+			gv_options.marker_shadows = true; // true|false: do the standard markers have "shadows" behind them?
+			gv_options.marker_link_target = '_blank'; // the name of the window or frame into which markers' URLs will load
+			gv_options.info_window_width = 0;  // in pixels, the width of the markers' pop-up info "bubbles" (can be overridden by 'window_width' in individual markers)
+			gv_options.thumbnail_width = 0;  // in pixels, the width of the markers' thumbnails (can be overridden by 'thumbnail_width' in individual markers)
+			gv_options.photo_size = [0,0];  // in pixels, the size of the photos in info windows (can be overridden by 'photo_width' or 'photo_size' in individual markers)
+			gv_options.hide_labels = false;  // true|false: hide labels when map first loads?
+			gv_options.labels_behind_markers = false; // true|false: are the labels behind other markers (true) or in front of them (false)?
+			gv_options.label_offset = [0,0];  // [x,y]: shift all markers' labels (positive numbers are right and down)
+			gv_options.label_centered = false;  // true|false: center labels with respect to their markers?  (label_left is also a valid option.)
+			gv_options.driving_directions = false;  // put a small "driving directions" form in each marker's pop-up window? (override with dd:true or dd:false in a marker's options)
+			gv_options.garmin_icon_set = 'gpsmap'; // 'gpsmap' are the small 16x16 icons; change it to '24x24' for larger icons
+			gv_options.marker_list_options = {};  // options for a dynamically-created list of markers
+			  gv_options.marker_list_options.enabled = false;  // true|false: enable or disable the marker list altogether
+			  gv_options.marker_list_options.floating = true;  // is the list a floating box inside the map itself?
+			  gv_options.marker_list_options.position = ['RIGHT_BOTTOM',6,38];  // floating list only: position within map
+			  gv_options.marker_list_options.min_width = 160; // minimum width, in pixels, of the floating list
+			  gv_options.marker_list_options.max_width = 160;  // maximum width
+			  gv_options.marker_list_options.min_height = 0;  // minimum height, in pixels, of the floating list
+			  gv_options.marker_list_options.max_height = 310;  // maximum height
+			  gv_options.marker_list_options.draggable = true;  // true|false, floating list only: can it be moved around the screen?
+			  gv_options.marker_list_options.collapsible = true;  // true|false, floating list only: can it be collapsed by double-clicking its top bar?
+			  gv_options.marker_list_options.include_tickmarks = false;  // true|false: are distance/time tickmarks included in the list?
+			  gv_options.marker_list_options.include_trackpoints = false;  // true|false: are "trackpoint" markers included in the list?
+			  gv_options.marker_list_options.dividers = false;  // true|false: will a thin line be drawn between each item in the list?
+			  gv_options.marker_list_options.desc = false;  // true|false: will the markers' descriptions be shown below their names in the list?
+			  gv_options.marker_list_options.icons = true;  // true|false: should the markers' icons appear to the left of their names in the list?
+			  gv_options.marker_list_options.thumbnails = false;  // true|false: should markers' thumbnails be shown in the list?
+			  gv_options.marker_list_options.folders_collapsed = false;  // true|false: do folders in the list start out in a collapsed state?
+			  gv_options.marker_list_options.folders_hidden = false;  // true|false: do folders in the list start out in a hidden state?
+			  gv_options.marker_list_options.collapsed_folders = []; // an array of folder names
+			  gv_options.marker_list_options.hidden_folders = []; // an array of folder names
+			  gv_options.marker_list_options.count_folder_items = false;  // true|false: list the number of items in each folder?
+			  gv_options.marker_list_options.wrap_names = true;  // true|false: should marker's names be allowed to wrap onto more than one line?
+			  gv_options.marker_list_options.unnamed = '[unnamed]';  // what 'name' should be assigned to  unnamed markers in the list?
+			  gv_options.marker_list_options.colors = false;  // true|false: should the names/descs of the points in the list be colorized the same as their markers?
+			  gv_options.marker_list_options.default_color = '';  // default HTML color code for the names/descs in the list
+			  gv_options.marker_list_options.limit = 0;  // how many markers to show in the list; 0 for no limit
+			  gv_options.marker_list_options.center = false;  // true|false: does the map center upon a marker when you click its name in the list?
+			  gv_options.marker_list_options.zoom = false;  // true|false: does the map zoom to a certain level when you click on a marker's name in the list?
+			  gv_options.marker_list_options.zoom_level = 18;  // if 'zoom' is true, what level should the map zoom to?
+			  gv_options.marker_list_options.info_window = true;  // true|false: do info windows pop up when the markers' names are clicked in the list?
+			  gv_options.marker_list_options.url_links = false;  // true|false: do the names in the list become instant links to the markers' URLs?
+			  gv_options.marker_list_options.toggle = false;  // true|false: does a marker disappear if you click on its name in the list?
+			  gv_options.marker_list_options.help_tooltips = false;  // true|false: do "tooltips" appear on marker names that tell you what happens when you click?
+			  gv_options.marker_list_options.id = 'gv_marker_list';  // id of a DIV tag that holds the list
+			  gv_options.marker_list_options.header = ''; // HTML code; be sure to put backslashes in front of any single quotes, and don't include any line breaks
+			  gv_options.marker_list_options.footer = ''; // HTML code
+			gv_options.marker_filter_options = {};  // options for removing waypoints that are out of the current view
+			  gv_options.marker_filter_options.enabled = false;  // true|false: should out-of-range markers be removed?
+			  gv_options.marker_filter_options.movement_threshold = 8;  // in pixels, how far the map has to move to trigger filtering
+			  gv_options.marker_filter_options.limit = 0;  // maximum number of markers to display on the map; 0 for no limit
+			  gv_options.marker_filter_options.update_list = true;  // true|false: should the marker list be updated with only the filtered markers?
+			  gv_options.marker_filter_options.sort_list_by_distance = false;  // true|false: should the marker list be sorted by distance from the center of the map?
+			  gv_options.marker_filter_options.min_zoom = 0;  // below this zoom level, don't show any markers at all
+			  gv_options.marker_filter_options.zoom_message = '';  // message to put in the marker list if the map is below the min_zoom threshold
+			gv_options.synthesize_fields = {}; // for example: {label:'{name}'} would cause all markers' names to become visible labels
+				
+			
+			// Load GPS Visualizer's Google Maps functions (this must be loaded AFTER gv_options are set):
+			if (window.location.toString().indexOf('https://') == 0) { // secure pages require secure scripts
+				document.writeln('<script src="https://gpsvisualizer.com/google_maps/functions3.js" type="text/javascript"><'+'/script>');
+			} else {
+				document.writeln('<script src="http://maps.gpsvisualizer.com/google_maps/functions3.js" type="text/javascript"><'+'/script>');
+			}
+			
+		</script>
+		
+		<style type="text/css">
+			/* Put any custom style definitions here (e.g., .gv_marker_info_window, .gv_marker_info_window_name, .gv_marker_list_item, .gv_tooltip, .gv_label, etc.) */
+			#gmap_div .gv_marker_info_window {
+				font-size:11px !important;
+			}
+			#gmap_div .gv_label {
+				opacity:0.80; filter:alpha(opacity=80);
+				color:white; background-color:#333333; border:1px solid black; padding:1px;
+				font:9px Verdana !important;
+				font-weight:normal !important;
+			}
+			
+		</style>
+		
+		<!-- end GPSV setup script and styles; begin map-drawing script (they must be separate) -->
+		<script type="text/javascript">
+			function GV_Map() {
+			  
+				GV_Setup_Map();
+				
+				
+				
+				GV_Draw_Marker({lat:52.4149756,lon:-4.0651147,name:'15:39:57 Bearing: 238 Dist: 54.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149749,lon:-4.0651168,name:'15:39:58 Bearing: 238 Dist: 53.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149727,lon:-4.0651197,name:'15:39:59 Bearing: 238 Dist: 53.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149735,lon:-4.0651190,name:'15:40:00 Bearing: 238 Dist: 53.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149750,lon:-4.0651228,name:'15:40:01 Bearing: 238 Dist: 53.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149749,lon:-4.0651148,name:'15:40:02 Bearing: 238 Dist: 53.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149762,lon:-4.0651051,name:'15:40:03 Bearing: 238 Dist: 54.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149763,lon:-4.0650987,name:'15:40:04 Bearing: 239 Dist: 54.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149765,lon:-4.0650945,name:'15:40:05 Bearing: 239 Dist: 55.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149709,lon:-4.0650898,name:'15:40:06 Bearing: 240 Dist: 55.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149705,lon:-4.0650827,name:'15:40:07 Bearing: 240 Dist: 55.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149684,lon:-4.0650824,name:'15:40:08 Bearing: 240 Dist: 55.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149610,lon:-4.0650816,name:'15:40:09 Bearing: 241 Dist: 55.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149466,lon:-4.0650810,name:'15:40:10 Bearing: 243 Dist: 54.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149287,lon:-4.0650764,name:'15:40:11 Bearing: 245 Dist: 53.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149234,lon:-4.0650710,name:'15:40:12 Bearing: 245 Dist: 53.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149237,lon:-4.0650707,name:'15:40:13 Bearing: 245 Dist: 53.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149234,lon:-4.0650752,name:'15:40:14 Bearing: 245 Dist: 53.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149241,lon:-4.0650791,name:'15:40:15 Bearing: 245 Dist: 53.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149131,lon:-4.0650736,name:'15:40:16 Bearing: 246 Dist: 53.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149042,lon:-4.0650818,name:'15:40:17 Bearing: 247 Dist: 52.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148975,lon:-4.0650798,name:'15:40:18 Bearing: 248 Dist: 52.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148941,lon:-4.0650874,name:'15:40:19 Bearing: 248 Dist: 51.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148977,lon:-4.0650915,name:'15:40:20 Bearing: 247 Dist: 51.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148986,lon:-4.0650882,name:'15:40:21 Bearing: 247 Dist: 51.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149015,lon:-4.0650919,name:'15:40:22 Bearing: 247 Dist: 51.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148999,lon:-4.0650911,name:'15:40:23 Bearing: 247 Dist: 51.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148999,lon:-4.0650929,name:'15:40:24 Bearing: 247 Dist: 51.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149039,lon:-4.0650945,name:'15:40:25 Bearing: 247 Dist: 51.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149048,lon:-4.0650949,name:'15:40:26 Bearing: 246 Dist: 51.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149056,lon:-4.0650934,name:'15:40:28 Bearing: 246 Dist: 51.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149069,lon:-4.0650893,name:'15:40:29 Bearing: 246 Dist: 52.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149058,lon:-4.0650858,name:'15:40:30 Bearing: 247 Dist: 52.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149049,lon:-4.0650851,name:'15:40:31 Bearing: 247 Dist: 52.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149077,lon:-4.0650853,name:'15:40:32 Bearing: 247 Dist: 52.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149066,lon:-4.0650870,name:'15:40:33 Bearing: 247 Dist: 52.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149059,lon:-4.0650908,name:'15:40:34 Bearing: 246 Dist: 51.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149013,lon:-4.0650993,name:'15:40:35 Bearing: 247 Dist: 51.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148973,lon:-4.0650990,name:'15:40:36 Bearing: 247 Dist: 51.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148936,lon:-4.0650994,name:'15:40:37 Bearing: 248 Dist: 50.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148888,lon:-4.0650992,name:'15:40:38 Bearing: 248 Dist: 50.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148833,lon:-4.0650993,name:'15:40:39 Bearing: 249 Dist: 50.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148711,lon:-4.0651022,name:'15:40:40 Bearing: 250 Dist: 49.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148641,lon:-4.0651016,name:'15:40:41 Bearing: 251 Dist: 49.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148709,lon:-4.0650996,name:'15:40:42 Bearing: 250 Dist: 49.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148909,lon:-4.0650952,name:'15:40:43 Bearing: 248 Dist: 50.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148941,lon:-4.0650949,name:'15:40:44 Bearing: 248 Dist: 51.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149128,lon:-4.0650945,name:'15:40:45 Bearing: 246 Dist: 51.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149203,lon:-4.0651008,name:'15:40:46 Bearing: 245 Dist: 51.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149420,lon:-4.0651030,name:'15:40:47 Bearing: 242 Dist: 52.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149399,lon:-4.0651082,name:'15:40:48 Bearing: 242 Dist: 52.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149413,lon:-4.0651163,name:'15:40:49 Bearing: 242 Dist: 52.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149424,lon:-4.0651240,name:'15:40:50 Bearing: 241 Dist: 51.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149391,lon:-4.0651323,name:'15:40:51 Bearing: 241 Dist: 50.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149421,lon:-4.0651387,name:'15:40:52 Bearing: 241 Dist: 50.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149460,lon:-4.0651458,name:'15:40:53 Bearing: 240 Dist: 50.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149504,lon:-4.0651525,name:'15:40:54 Bearing: 239 Dist: 50.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149580,lon:-4.0651609,name:'15:40:55 Bearing: 238 Dist: 50.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149714,lon:-4.0651656,name:'15:40:56 Bearing: 237 Dist: 50.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149764,lon:-4.0651724,name:'15:40:57 Bearing: 236 Dist: 50.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149971,lon:-4.0651713,name:'15:40:58 Bearing: 234 Dist: 52.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150174,lon:-4.0651689,name:'15:40:59 Bearing: 232 Dist: 53.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150330,lon:-4.0651700,name:'15:41:00 Bearing: 230 Dist: 54.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150322,lon:-4.0651753,name:'15:41:01 Bearing: 230 Dist: 54.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150306,lon:-4.0651784,name:'15:41:02 Bearing: 230 Dist: 54.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150262,lon:-4.0651854,name:'15:41:03 Bearing: 230 Dist: 53.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150278,lon:-4.0651919,name:'15:41:04 Bearing: 230 Dist: 53.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150450,lon:-4.0651930,name:'15:41:05 Bearing: 228 Dist: 54.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150639,lon:-4.0651930,name:'15:41:06 Bearing: 227 Dist: 55.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150873,lon:-4.0651921,name:'15:41:07 Bearing: 225 Dist: 57.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151181,lon:-4.0651883,name:'15:41:08 Bearing: 223 Dist: 60.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151482,lon:-4.0651852,name:'15:41:09 Bearing: 221 Dist: 62.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151506,lon:-4.0651903,name:'15:41:10 Bearing: 220 Dist: 62.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151467,lon:-4.0651980,name:'15:41:11 Bearing: 220 Dist: 62.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151576,lon:-4.0651998,name:'15:41:12 Bearing: 219 Dist: 62.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151767,lon:-4.0652020,name:'15:41:13 Bearing: 218 Dist: 64.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4152146,lon:-4.0651964,name:'15:41:14 Bearing: 216 Dist: 68.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4152178,lon:-4.0651994,name:'15:41:15 Bearing: 215 Dist: 68.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4152294,lon:-4.0651994,name:'15:41:16 Bearing: 215 Dist: 69.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4152450,lon:-4.0651985,name:'15:41:17 Bearing: 214 Dist: 70.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4152530,lon:-4.0651980,name:'15:41:18 Bearing: 214 Dist: 71.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4152512,lon:-4.0652029,name:'15:41:19 Bearing: 213 Dist: 71.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4152383,lon:-4.0652116,name:'15:41:20 Bearing: 214 Dist: 69.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4152135,lon:-4.0652251,name:'15:41:21 Bearing: 215 Dist: 66.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151986,lon:-4.0652377,name:'15:41:22 Bearing: 215 Dist: 65.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151745,lon:-4.0652460,name:'15:41:23 Bearing: 216 Dist: 62.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151527,lon:-4.0652553,name:'15:41:24 Bearing: 217 Dist: 60.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151416,lon:-4.0652633,name:'15:41:25 Bearing: 217 Dist: 58.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151356,lon:-4.0652702,name:'15:41:26 Bearing: 217 Dist: 58.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151334,lon:-4.0652779,name:'15:41:27 Bearing: 217 Dist: 57.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151284,lon:-4.0652891,name:'15:41:28 Bearing: 217 Dist: 56.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151215,lon:-4.0653014,name:'15:41:29 Bearing: 216 Dist: 55.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151124,lon:-4.0653150,name:'15:41:30 Bearing: 216 Dist: 54.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151048,lon:-4.0653279,name:'15:41:31 Bearing: 216 Dist: 52.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4151001,lon:-4.0653413,name:'15:41:32 Bearing: 216 Dist: 52.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150992,lon:-4.0653457,name:'15:41:33 Bearing: 215 Dist: 51.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150862,lon:-4.0653563,name:'15:41:34 Bearing: 216 Dist: 50.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150880,lon:-4.0653688,name:'15:41:35 Bearing: 215 Dist: 49.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150862,lon:-4.0653806,name:'15:41:36 Bearing: 214 Dist: 49.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150819,lon:-4.0653913,name:'15:41:37 Bearing: 214 Dist: 48.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150719,lon:-4.0654037,name:'15:41:38 Bearing: 214 Dist: 47.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150619,lon:-4.0654142,name:'15:41:39 Bearing: 214 Dist: 45.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150525,lon:-4.0654217,name:'15:41:40 Bearing: 214 Dist: 44.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150461,lon:-4.0654382,name:'15:41:41 Bearing: 213 Dist: 43.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150388,lon:-4.0654532,name:'15:41:42 Bearing: 213 Dist: 42.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150296,lon:-4.0654665,name:'15:41:43 Bearing: 212 Dist: 40.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150199,lon:-4.0654788,name:'15:41:44 Bearing: 212 Dist: 39.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150121,lon:-4.0654929,name:'15:41:45 Bearing: 212 Dist: 38.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150125,lon:-4.0655048,name:'15:41:46 Bearing: 211 Dist: 37.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150080,lon:-4.0655140,name:'15:41:47 Bearing: 210 Dist: 36.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4150030,lon:-4.0655218,name:'15:41:48 Bearing: 210 Dist: 36.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149944,lon:-4.0655287,name:'15:41:49 Bearing: 210 Dist: 35.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149837,lon:-4.0655356,name:'15:41:50 Bearing: 210 Dist: 33.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149809,lon:-4.0655412,name:'15:41:51 Bearing: 210 Dist: 33.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149763,lon:-4.0655529,name:'15:41:52 Bearing: 209 Dist: 32.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149743,lon:-4.0655629,name:'15:41:53 Bearing: 208 Dist: 32.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149716,lon:-4.0655723,name:'15:41:54 Bearing: 208 Dist: 31.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149639,lon:-4.0655814,name:'15:41:55 Bearing: 207 Dist: 30.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149550,lon:-4.0655917,name:'15:41:56 Bearing: 207 Dist: 29.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149496,lon:-4.0656006,name:'15:41:57 Bearing: 207 Dist: 28.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149445,lon:-4.0656138,name:'15:41:58 Bearing: 205 Dist: 27.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149375,lon:-4.0656260,name:'15:42:00 Bearing: 204 Dist: 26.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149309,lon:-4.0656347,name:'15:42:01 Bearing: 204 Dist: 25.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149318,lon:-4.0656381,name:'15:42:02 Bearing: 203 Dist: 25.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149284,lon:-4.0656424,name:'15:42:03 Bearing: 203 Dist: 25.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149232,lon:-4.0656492,name:'15:42:04 Bearing: 203 Dist: 24.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149125,lon:-4.0656600,name:'15:42:05 Bearing: 202 Dist: 22.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149023,lon:-4.0656680,name:'15:42:06 Bearing: 202 Dist: 21.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148917,lon:-4.0656729,name:'15:42:07 Bearing: 202 Dist: 20.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148880,lon:-4.0656962,name:'15:42:08 Bearing: 198 Dist: 19.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148822,lon:-4.0657165,name:'15:42:09 Bearing: 195 Dist: 18.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148779,lon:-4.0657267,name:'15:42:10 Bearing: 193 Dist: 17.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148723,lon:-4.0657409,name:'15:42:11 Bearing: 190 Dist: 17.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148662,lon:-4.0657477,name:'15:42:12 Bearing: 189 Dist: 16.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148585,lon:-4.0657619,name:'15:42:13 Bearing: 185 Dist: 15.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148500,lon:-4.0657671,name:'15:42:14 Bearing: 184 Dist: 14.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148482,lon:-4.0657731,name:'15:42:15 Bearing: 183 Dist: 14.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148417,lon:-4.0657866,name:'15:42:16 Bearing: 178 Dist: 13.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148372,lon:-4.0657967,name:'15:42:17 Bearing: 175 Dist: 12.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148336,lon:-4.0658043,name:'15:42:18 Bearing: 172 Dist: 12.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148307,lon:-4.0658090,name:'15:42:19 Bearing: 170 Dist: 12.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148278,lon:-4.0658141,name:'15:42:20 Bearing: 166 Dist: 11.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148270,lon:-4.0658157,name:'15:42:21 Bearing: 165 Dist: 11.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148233,lon:-4.0658155,name:'15:42:22 Bearing: 164 Dist: 11.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148218,lon:-4.0658161,name:'15:42:23 Bearing: 164 Dist: 11.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148187,lon:-4.0658209,name:'15:42:24 Bearing: 159 Dist: 10.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148140,lon:-4.0658308,name:'15:42:25 Bearing: 166 Dist: 10.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148109,lon:-4.0658326,name:'15:42:26 Bearing: 165 Dist: 10.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148091,lon:-4.0658365,name:'15:42:27 Bearing: 163 Dist: 10.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148012,lon:-4.0658534,name:'15:42:28 Bearing: 155 Dist: 9.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147945,lon:-4.0658647,name:'15:42:29 Bearing: 148 Dist: 9.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147795,lon:-4.0658828,name:'15:42:30 Bearing: 136 Dist: 8.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147758,lon:-4.0658881,name:'15:42:31 Bearing: 132 Dist: 8.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147770,lon:-4.0658855,name:'15:42:32 Bearing: 133 Dist: 8.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147701,lon:-4.0658906,name:'15:42:33 Bearing: 128 Dist: 8.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147421,lon:-4.0659022,name:'15:42:34 Bearing: 105 Dist: 7.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147322,lon:-4.0659095,name:'15:42:35 Bearing: 96 Dist: 7.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147284,lon:-4.0659100,name:'15:42:36 Bearing: 94 Dist: 7.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147185,lon:-4.0658749,name:'15:42:42 Bearing: 84 Dist: 5.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147332,lon:-4.0658392,name:'15:42:43 Bearing: 146 Dist: 85.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147355,lon:-4.0657989,name:'15:42:44 Bearing: 160 Dist: 84.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147697,lon:-4.0656975,name:'15:42:45 Bearing: 150 Dist: 86.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147379,lon:-4.0657402,name:'15:42:47 Bearing: 145 Dist: 83.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147146,lon:-4.0657401,name:'15:42:48 Bearing: 144 Dist: 81.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147094,lon:-4.0657466,name:'15:42:49 Bearing: 143 Dist: 80.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147197,lon:-4.0657378,name:'15:42:50 Bearing: 144 Dist: 81.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147112,lon:-4.0657429,name:'15:42:51 Bearing: 143 Dist: 80.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147111,lon:-4.0657474,name:'15:42:52 Bearing: 143 Dist: 80.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147062,lon:-4.0657478,name:'15:42:53 Bearing: 143 Dist: 80.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147038,lon:-4.0657471,name:'15:42:54 Bearing: 143 Dist: 80.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147032,lon:-4.0657444,name:'15:42:55 Bearing: 143 Dist: 80.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147016,lon:-4.0657428,name:'15:42:56 Bearing: 143 Dist: 79.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147006,lon:-4.0657433,name:'15:42:57 Bearing: 143 Dist: 79.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146974,lon:-4.0657441,name:'15:42:58 Bearing: 143 Dist: 79.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146991,lon:-4.0657380,name:'15:42:59 Bearing: 143 Dist: 79.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147054,lon:-4.0657349,name:'15:43:00 Bearing: 144 Dist: 80.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147096,lon:-4.0657327,name:'15:43:01 Bearing: 144 Dist: 80.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147115,lon:-4.0657285,name:'15:43:02 Bearing: 145 Dist: 80.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147080,lon:-4.0657145,name:'15:43:03 Bearing: 146 Dist: 79.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147064,lon:-4.0657077,name:'15:43:04 Bearing: 146 Dist: 79.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146820,lon:-4.0657015,name:'15:43:05 Bearing: 146 Dist: 76.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146750,lon:-4.0656855,name:'15:43:06 Bearing: 147 Dist: 75.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146759,lon:-4.0656862,name:'15:43:07 Bearing: 147 Dist: 76.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146891,lon:-4.0656831,name:'15:43:08 Bearing: 148 Dist: 77.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146921,lon:-4.0656741,name:'15:43:09 Bearing: 149 Dist: 77.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146960,lon:-4.0656722,name:'15:43:10 Bearing: 149 Dist: 77.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146915,lon:-4.0656727,name:'15:43:11 Bearing: 149 Dist: 77.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146921,lon:-4.0656724,name:'15:43:12 Bearing: 149 Dist: 77.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146912,lon:-4.0656704,name:'15:43:13 Bearing: 149 Dist: 77.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146886,lon:-4.0656729,name:'15:43:14 Bearing: 149 Dist: 77.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146846,lon:-4.0656750,name:'15:43:15 Bearing: 149 Dist: 76.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146748,lon:-4.0656742,name:'15:43:16 Bearing: 148 Dist: 75.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146722,lon:-4.0656728,name:'15:43:17 Bearing: 148 Dist: 75.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146682,lon:-4.0656770,name:'15:43:18 Bearing: 148 Dist: 75.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146649,lon:-4.0656779,name:'15:43:19 Bearing: 147 Dist: 74.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146605,lon:-4.0656781,name:'15:43:20 Bearing: 147 Dist: 74.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146542,lon:-4.0656759,name:'15:43:21 Bearing: 147 Dist: 73.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146495,lon:-4.0656730,name:'15:43:22 Bearing: 147 Dist: 72.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146448,lon:-4.0656725,name:'15:43:23 Bearing: 147 Dist: 72.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146414,lon:-4.0656719,name:'15:43:24 Bearing: 147 Dist: 72.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146357,lon:-4.0656691,name:'15:43:25 Bearing: 147 Dist: 71.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146309,lon:-4.0656675,name:'15:43:26 Bearing: 147 Dist: 70.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146257,lon:-4.0656664,name:'15:43:27 Bearing: 147 Dist: 70.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146221,lon:-4.0656667,name:'15:43:28 Bearing: 147 Dist: 69.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146179,lon:-4.0656730,name:'15:43:29 Bearing: 146 Dist: 69.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146130,lon:-4.0656741,name:'15:43:30 Bearing: 145 Dist: 69.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146076,lon:-4.0656747,name:'15:43:32 Bearing: 145 Dist: 68.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145946,lon:-4.0656792,name:'15:43:33 Bearing: 144 Dist: 67.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145832,lon:-4.0656928,name:'15:43:34 Bearing: 142 Dist: 66.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145535,lon:-4.0657112,name:'15:43:35 Bearing: 138 Dist: 63.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145480,lon:-4.0657058,name:'15:43:36 Bearing: 138 Dist: 62.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145372,lon:-4.0657166,name:'15:43:37 Bearing: 136 Dist: 62.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145171,lon:-4.0657382,name:'15:43:38 Bearing: 133 Dist: 60.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145192,lon:-4.0657248,name:'15:43:39 Bearing: 134 Dist: 60.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145191,lon:-4.0657099,name:'15:43:40 Bearing: 136 Dist: 59.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145158,lon:-4.0657038,name:'15:43:41 Bearing: 136 Dist: 59.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145050,lon:-4.0656974,name:'15:43:42 Bearing: 136 Dist: 58.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143824,lon:-4.0659064,name:'15:43:43 Bearing: 109 Dist: 53.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143541,lon:-4.0658610,name:'15:43:44 Bearing: 110 Dist: 49.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143380,lon:-4.0658697,name:'15:43:45 Bearing: 108 Dist: 48.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142860,lon:-4.0659365,name:'15:43:46 Bearing: 100 Dist: 47.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142111,lon:-4.0660672,name:'15:43:47 Bearing: 91 Dist: 51.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4140996,lon:-4.0662139,name:'15:43:48 Bearing: 82 Dist: 57.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4139974,lon:-4.0663663,name:'15:43:49 Bearing: 77 Dist: 66.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4138810,lon:-4.0665683,name:'15:43:50 Bearing: 73 Dist: 81.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4138179,lon:-4.0667094,name:'15:43:51 Bearing: 71 Dist: 92.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4137407,lon:-4.0668609,name:'15:43:52 Bearing: 70 Dist: 104.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4136238,lon:-4.0669171,name:'15:43:53 Bearing: 67 Dist: 112.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143203,lon:-4.0659234,name:'15:43:54 Bearing: 103 Dist: 49.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142886,lon:-4.0658413,name:'15:43:55 Bearing: 105 Dist: 43.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142990,lon:-4.0658569,name:'15:43:56 Bearing: 105 Dist: 44.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143193,lon:-4.0658410,name:'15:43:57 Bearing: 108 Dist: 45.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143033,lon:-4.0658385,name:'15:43:58 Bearing: 106 Dist: 44.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142499,lon:-4.0658551,name:'15:43:59 Bearing: 100 Dist: 41.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141890,lon:-4.0658645,name:'15:44:00 Bearing: 94 Dist: 37.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141643,lon:-4.0658414,name:'15:44:01 Bearing: 92 Dist: 35.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141708,lon:-4.0658684,name:'15:44:02 Bearing: 92 Dist: 37.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141915,lon:-4.0658877,name:'15:44:03 Bearing: 94 Dist: 39.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142262,lon:-4.0658481,name:'15:44:04 Bearing: 98 Dist: 39.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142664,lon:-4.0658204,name:'15:44:05 Bearing: 104 Dist: 40.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142817,lon:-4.0658123,name:'15:44:06 Bearing: 106 Dist: 41.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143011,lon:-4.0657880,name:'15:44:07 Bearing: 109 Dist: 41.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143105,lon:-4.0657781,name:'15:44:08 Bearing: 111 Dist: 42.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143189,lon:-4.0657791,name:'15:44:09 Bearing: 112 Dist: 42.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143191,lon:-4.0657775,name:'15:44:10 Bearing: 112 Dist: 42.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143192,lon:-4.0657795,name:'15:44:11 Bearing: 112 Dist: 42.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143201,lon:-4.0657997,name:'15:44:12 Bearing: 111 Dist: 43.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143294,lon:-4.0658308,name:'15:44:13 Bearing: 109 Dist: 46.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143522,lon:-4.0658551,name:'15:44:14 Bearing: 110 Dist: 49.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143621,lon:-4.0658721,name:'15:44:15 Bearing: 110 Dist: 50.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143651,lon:-4.0658741,name:'15:44:16 Bearing: 110 Dist: 50.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143685,lon:-4.0658666,name:'15:44:17 Bearing: 111 Dist: 50.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143813,lon:-4.0658501,name:'15:44:18 Bearing: 113 Dist: 51.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143882,lon:-4.0658466,name:'15:44:19 Bearing: 113 Dist: 51.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143931,lon:-4.0658392,name:'15:44:20 Bearing: 114 Dist: 51.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144034,lon:-4.0658298,name:'15:44:21 Bearing: 116 Dist: 52.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144049,lon:-4.0658203,name:'15:44:22 Bearing: 117 Dist: 52.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144085,lon:-4.0658149,name:'15:44:23 Bearing: 117 Dist: 52.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144098,lon:-4.0658172,name:'15:44:24 Bearing: 117 Dist: 52.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144268,lon:-4.0658341,name:'15:44:25 Bearing: 117 Dist: 54.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144343,lon:-4.0658354,name:'15:44:26 Bearing: 118 Dist: 55.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144384,lon:-4.0658328,name:'15:44:27 Bearing: 119 Dist: 55.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144441,lon:-4.0658268,name:'15:44:28 Bearing: 119 Dist: 56.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144451,lon:-4.0658224,name:'15:44:29 Bearing: 120 Dist: 56.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144499,lon:-4.0658116,name:'15:44:30 Bearing: 121 Dist: 56.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144528,lon:-4.0658064,name:'15:44:31 Bearing: 122 Dist: 56.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144543,lon:-4.0657991,name:'15:44:32 Bearing: 123 Dist: 56.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144533,lon:-4.0657932,name:'15:44:33 Bearing: 123 Dist: 55.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144511,lon:-4.0657879,name:'15:44:34 Bearing: 123 Dist: 55.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144519,lon:-4.0657826,name:'15:44:35 Bearing: 124 Dist: 55.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144594,lon:-4.0657787,name:'15:44:36 Bearing: 125 Dist: 55.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144632,lon:-4.0657814,name:'15:44:37 Bearing: 125 Dist: 56.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144575,lon:-4.0657784,name:'15:44:38 Bearing: 124 Dist: 55.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144535,lon:-4.0657855,name:'15:44:39 Bearing: 124 Dist: 55.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144509,lon:-4.0657852,name:'15:44:40 Bearing: 123 Dist: 55.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144483,lon:-4.0657771,name:'15:44:41 Bearing: 124 Dist: 54.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144487,lon:-4.0657620,name:'15:44:42 Bearing: 125 Dist: 54.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144424,lon:-4.0657413,name:'15:44:43 Bearing: 127 Dist: 53.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144373,lon:-4.0657289,name:'15:44:44 Bearing: 128 Dist: 52.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144282,lon:-4.0657163,name:'15:44:45 Bearing: 128 Dist: 50.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144178,lon:-4.0657049,name:'15:44:46 Bearing: 129 Dist: 49.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144068,lon:-4.0656931,name:'15:44:47 Bearing: 129 Dist: 48.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143992,lon:-4.0656798,name:'15:44:48 Bearing: 130 Dist: 46.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143955,lon:-4.0656685,name:'15:44:49 Bearing: 131 Dist: 46.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143952,lon:-4.0656656,name:'15:44:50 Bearing: 131 Dist: 46.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143949,lon:-4.0656616,name:'15:44:51 Bearing: 131 Dist: 45.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143926,lon:-4.0656572,name:'15:44:52 Bearing: 132 Dist: 45.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143911,lon:-4.0656527,name:'15:44:53 Bearing: 132 Dist: 45.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143888,lon:-4.0656491,name:'15:44:55 Bearing: 133 Dist: 45.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143817,lon:-4.0656456,name:'15:44:56 Bearing: 132 Dist: 44.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143692,lon:-4.0656382,name:'15:44:57 Bearing: 132 Dist: 42.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143626,lon:-4.0656333,name:'15:44:58 Bearing: 132 Dist: 41.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143565,lon:-4.0656277,name:'15:44:59 Bearing: 132 Dist: 41.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143512,lon:-4.0656271,name:'15:45:00 Bearing: 132 Dist: 40.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143479,lon:-4.0656188,name:'15:45:01 Bearing: 133 Dist: 40.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143422,lon:-4.0656122,name:'15:45:02 Bearing: 133 Dist: 39.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143377,lon:-4.0656101,name:'15:45:03 Bearing: 133 Dist: 38.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143358,lon:-4.0656061,name:'15:45:04 Bearing: 133 Dist: 38.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143334,lon:-4.0655986,name:'15:45:05 Bearing: 134 Dist: 38.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143252,lon:-4.0655915,name:'15:45:06 Bearing: 135 Dist: 36.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143164,lon:-4.0655910,name:'15:45:07 Bearing: 134 Dist: 36.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143127,lon:-4.0655873,name:'15:45:08 Bearing: 134 Dist: 35.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143137,lon:-4.0655793,name:'15:45:09 Bearing: 135 Dist: 35.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143136,lon:-4.0655699,name:'15:45:10 Bearing: 137 Dist: 35.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143145,lon:-4.0655682,name:'15:45:11 Bearing: 137 Dist: 35.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143150,lon:-4.0655704,name:'15:45:12 Bearing: 137 Dist: 35.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143165,lon:-4.0655703,name:'15:45:13 Bearing: 137 Dist: 35.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143190,lon:-4.0655677,name:'15:45:14 Bearing: 138 Dist: 35.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143223,lon:-4.0655642,name:'15:45:15 Bearing: 139 Dist: 36.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143220,lon:-4.0655639,name:'15:45:16 Bearing: 139 Dist: 35.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143232,lon:-4.0655633,name:'15:45:17 Bearing: 139 Dist: 36.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143257,lon:-4.0655621,name:'15:45:18 Bearing: 140 Dist: 36.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143287,lon:-4.0655589,name:'15:45:19 Bearing: 141 Dist: 36.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143290,lon:-4.0655578,name:'15:45:20 Bearing: 141 Dist: 36.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143294,lon:-4.0655568,name:'15:45:21 Bearing: 141 Dist: 36.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143312,lon:-4.0655559,name:'15:45:22 Bearing: 142 Dist: 36.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143331,lon:-4.0655522,name:'15:45:23 Bearing: 142 Dist: 36.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143325,lon:-4.0655545,name:'15:45:24 Bearing: 142 Dist: 36.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143311,lon:-4.0655521,name:'15:45:25 Bearing: 142 Dist: 36.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143311,lon:-4.0655472,name:'15:45:26 Bearing: 143 Dist: 36.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143317,lon:-4.0655408,name:'15:45:27 Bearing: 144 Dist: 36.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143351,lon:-4.0655315,name:'15:45:28 Bearing: 147 Dist: 36.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143370,lon:-4.0655278,name:'15:45:29 Bearing: 148 Dist: 36.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143368,lon:-4.0655240,name:'15:45:30 Bearing: 148 Dist: 36.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143374,lon:-4.0655198,name:'15:45:31 Bearing: 149 Dist: 36.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143384,lon:-4.0655175,name:'15:45:32 Bearing: 150 Dist: 36.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143390,lon:-4.0655176,name:'15:45:33 Bearing: 150 Dist: 36.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143402,lon:-4.0655145,name:'15:45:34 Bearing: 151 Dist: 36.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143421,lon:-4.0655104,name:'15:45:35 Bearing: 152 Dist: 37.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143434,lon:-4.0655074,name:'15:45:36 Bearing: 152 Dist: 37.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143460,lon:-4.0655031,name:'15:45:37 Bearing: 153 Dist: 37.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143460,lon:-4.0655014,name:'15:45:38 Bearing: 154 Dist: 37.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143463,lon:-4.0654994,name:'15:45:39 Bearing: 154 Dist: 37.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143462,lon:-4.0655031,name:'15:45:40 Bearing: 153 Dist: 37.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143450,lon:-4.0655059,name:'15:45:41 Bearing: 153 Dist: 37.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143459,lon:-4.0655082,name:'15:45:42 Bearing: 152 Dist: 37.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143418,lon:-4.0655078,name:'15:45:43 Bearing: 152 Dist: 37.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143350,lon:-4.0655092,name:'15:45:44 Bearing: 151 Dist: 36.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143291,lon:-4.0655105,name:'15:45:45 Bearing: 151 Dist: 35.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143235,lon:-4.0655119,name:'15:45:46 Bearing: 150 Dist: 35.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143176,lon:-4.0655110,name:'15:45:47 Bearing: 149 Dist: 34.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143118,lon:-4.0655114,name:'15:45:48 Bearing: 149 Dist: 33.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143064,lon:-4.0655134,name:'15:45:49 Bearing: 148 Dist: 33.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143008,lon:-4.0655133,name:'15:45:50 Bearing: 147 Dist: 32.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142958,lon:-4.0655117,name:'15:45:51 Bearing: 147 Dist: 32.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142894,lon:-4.0655103,name:'15:45:52 Bearing: 147 Dist: 31.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142833,lon:-4.0655095,name:'15:45:53 Bearing: 146 Dist: 30.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142757,lon:-4.0655078,name:'15:45:54 Bearing: 146 Dist: 29.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142703,lon:-4.0655056,name:'15:45:55 Bearing: 146 Dist: 29.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142646,lon:-4.0655033,name:'15:45:56 Bearing: 145 Dist: 28.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142585,lon:-4.0655011,name:'15:45:57 Bearing: 145 Dist: 27.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142530,lon:-4.0654983,name:'15:45:58 Bearing: 145 Dist: 27.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142478,lon:-4.0654969,name:'15:45:59 Bearing: 145 Dist: 26.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142425,lon:-4.0654960,name:'15:46:00 Bearing: 145 Dist: 26.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142374,lon:-4.0654929,name:'15:46:01 Bearing: 145 Dist: 25.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142322,lon:-4.0654906,name:'15:46:02 Bearing: 145 Dist: 24.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142234,lon:-4.0654889,name:'15:46:03 Bearing: 144 Dist: 23.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142161,lon:-4.0654886,name:'15:46:04 Bearing: 143 Dist: 23.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142109,lon:-4.0654848,name:'15:46:05 Bearing: 143 Dist: 22.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142052,lon:-4.0654826,name:'15:46:06 Bearing: 143 Dist: 21.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142019,lon:-4.0654772,name:'15:46:07 Bearing: 144 Dist: 21.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141974,lon:-4.0654721,name:'15:46:08 Bearing: 145 Dist: 20.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141928,lon:-4.0654681,name:'15:46:09 Bearing: 146 Dist: 20.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141884,lon:-4.0654639,name:'15:46:10 Bearing: 146 Dist: 19.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141847,lon:-4.0654641,name:'15:46:11 Bearing: 146 Dist: 19.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141672,lon:-4.0654690,name:'15:46:12 Bearing: 140 Dist: 17.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141541,lon:-4.0654698,name:'15:46:13 Bearing: 137 Dist: 16.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142291,lon:-4.0655225,name:'15:46:14 Bearing: 135 Dist: 25.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143301,lon:-4.0655641,name:'15:46:15 Bearing: 140 Dist: 36.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144340,lon:-4.0656246,name:'15:46:16 Bearing: 140 Dist: 49.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144984,lon:-4.0657024,name:'15:46:17 Bearing: 135 Dist: 57.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145664,lon:-4.0658232,name:'15:46:18 Bearing: 129 Dist: 67.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146466,lon:-4.0659224,name:'15:46:19 Bearing: 126 Dist: 78.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147065,lon:-4.0660156,name:'15:46:20 Bearing: 129 Dist: 87.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147229,lon:-4.0660746,name:'15:46:22 Bearing: 129 Dist: 91.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147159,lon:-4.0661021,name:'15:46:23 Bearing: 127 Dist: 91.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146752,lon:-4.0660894,name:'15:46:24 Bearing: 122 Dist: 87.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145947,lon:-4.0659715,name:'15:46:25 Bearing: 120 Dist: 75.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145339,lon:-4.0658855,name:'15:46:26 Bearing: 122 Dist: 66.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144817,lon:-4.0658120,name:'15:46:27 Bearing: 124 Dist: 59.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144517,lon:-4.0658065,name:'15:46:28 Bearing: 122 Dist: 56.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144153,lon:-4.0657848,name:'15:46:29 Bearing: 120 Dist: 51.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143987,lon:-4.0657852,name:'15:46:30 Bearing: 119 Dist: 50.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143850,lon:-4.0657685,name:'15:46:31 Bearing: 119 Dist: 48.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143761,lon:-4.0657502,name:'15:46:32 Bearing: 120 Dist: 46.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143575,lon:-4.0657267,name:'15:46:33 Bearing: 120 Dist: 44.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143396,lon:-4.0656933,name:'15:46:34 Bearing: 122 Dist: 41.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143231,lon:-4.0656683,name:'15:46:35 Bearing: 123 Dist: 39.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143183,lon:-4.0656542,name:'15:46:36 Bearing: 124 Dist: 38.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143137,lon:-4.0656315,name:'15:46:37 Bearing: 127 Dist: 36.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143136,lon:-4.0656296,name:'15:46:38 Bearing: 127 Dist: 36.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143061,lon:-4.0656184,name:'15:46:39 Bearing: 128 Dist: 35.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142995,lon:-4.0656086,name:'15:46:40 Bearing: 129 Dist: 34.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142968,lon:-4.0655998,name:'15:46:41 Bearing: 130 Dist: 34.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142908,lon:-4.0655982,name:'15:46:42 Bearing: 129 Dist: 33.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143007,lon:-4.0656203,name:'15:46:43 Bearing: 127 Dist: 35.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143133,lon:-4.0656316,name:'15:46:44 Bearing: 127 Dist: 36.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143200,lon:-4.0656404,name:'15:46:45 Bearing: 127 Dist: 37.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143123,lon:-4.0656241,name:'15:46:46 Bearing: 128 Dist: 36.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142884,lon:-4.0655896,name:'15:46:47 Bearing: 130 Dist: 33.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142587,lon:-4.0655505,name:'15:46:48 Bearing: 134 Dist: 29.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142200,lon:-4.0654894,name:'15:46:49 Bearing: 143 Dist: 23.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142011,lon:-4.0654638,name:'15:46:50 Bearing: 149 Dist: 21.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141831,lon:-4.0654345,name:'15:46:51 Bearing: 157 Dist: 18.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141632,lon:-4.0654051,name:'15:46:52 Bearing: 169 Dist: 16.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141516,lon:-4.0653888,name:'15:46:53 Bearing: 176 Dist: 14.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141442,lon:-4.0653756,name:'15:46:54 Bearing: 179 Dist: 14.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141369,lon:-4.0653632,name:'15:46:55 Bearing: 182 Dist: 13.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141509,lon:-4.0653516,name:'15:46:56 Bearing: 186 Dist: 14.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141431,lon:-4.0653444,name:'15:46:57 Bearing: 188 Dist: 14.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4140797,lon:-4.0653413,name:'15:46:58 Bearing: 193 Dist: 7.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4137226,lon:-4.0657003,name:'15:47:01 Bearing: 33 Dist: 39.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4138695,lon:-4.0655002,name:'15:47:02 Bearing: 25 Dist: 18.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4139480,lon:-4.0654181,name:'15:47:03 Bearing: 16 Dist: 8.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4139740,lon:-4.0653953,name:'15:47:04 Bearing: 8 Dist: 5.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4139944,lon:-4.0653623,name:'15:47:05 Bearing: 351 Dist: 97.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4140045,lon:-4.0653467,name:'15:47:06 Bearing: 336 Dist: 96.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4140204,lon:-4.0653256,name:'15:47:07 Bearing: 38 Dist: 94.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4140466,lon:-4.0653235,name:'15:47:08 Bearing: 38 Dist: 91.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141714,lon:-4.0654349,name:'15:47:09 Bearing: 41 Dist: 79.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142321,lon:-4.0654993,name:'15:47:10 Bearing: 43 Dist: 74.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142996,lon:-4.0655512,name:'15:47:11 Bearing: 45 Dist: 68.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143410,lon:-4.0655293,name:'15:47:12 Bearing: 45 Dist: 63.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143272,lon:-4.0655897,name:'15:47:13 Bearing: 46 Dist: 67.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143368,lon:-4.0656309,name:'15:47:14 Bearing: 47 Dist: 67.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143249,lon:-4.0656704,name:'15:47:15 Bearing: 48 Dist: 70.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143050,lon:-4.0656841,name:'15:47:16 Bearing: 48 Dist: 72.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143197,lon:-4.0657366,name:'15:47:17 Bearing: 49 Dist: 72.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143249,lon:-4.0657509,name:'15:47:18 Bearing: 49 Dist: 73.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143232,lon:-4.0657325,name:'15:47:19 Bearing: 49 Dist: 72.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143233,lon:-4.0657357,name:'15:47:20 Bearing: 49 Dist: 72.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143237,lon:-4.0657243,name:'15:47:21 Bearing: 49 Dist: 72.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143235,lon:-4.0657071,name:'15:47:22 Bearing: 49 Dist: 71.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143091,lon:-4.0657049,name:'15:47:23 Bearing: 48 Dist: 72.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143098,lon:-4.0656782,name:'15:47:24 Bearing: 48 Dist: 71.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143063,lon:-4.0656663,name:'15:47:25 Bearing: 47 Dist: 71.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142968,lon:-4.0656508,name:'15:47:26 Bearing: 47 Dist: 72.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142936,lon:-4.0656261,name:'15:47:27 Bearing: 46 Dist: 71.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142856,lon:-4.0656157,name:'15:47:28 Bearing: 46 Dist: 72.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142794,lon:-4.0656033,name:'15:47:29 Bearing: 46 Dist: 72.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142699,lon:-4.0655860,name:'15:47:30 Bearing: 45 Dist: 72.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142585,lon:-4.0655780,name:'15:47:31 Bearing: 45 Dist: 73.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142514,lon:-4.0655639,name:'15:47:32 Bearing: 45 Dist: 74.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142454,lon:-4.0655473,name:'15:47:33 Bearing: 44 Dist: 74.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142448,lon:-4.0655379,name:'15:47:34 Bearing: 44 Dist: 74.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142453,lon:-4.0655382,name:'15:47:35 Bearing: 44 Dist: 74.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142457,lon:-4.0655388,name:'15:47:36 Bearing: 44 Dist: 73.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142437,lon:-4.0654986,name:'15:47:37 Bearing: 43 Dist: 73.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142431,lon:-4.0654801,name:'15:47:38 Bearing: 43 Dist: 72.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142391,lon:-4.0654653,name:'15:47:39 Bearing: 42 Dist: 73.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142338,lon:-4.0654522,name:'15:47:40 Bearing: 42 Dist: 73.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142291,lon:-4.0654423,name:'15:47:41 Bearing: 42 Dist: 73.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142242,lon:-4.0654300,name:'15:47:42 Bearing: 41 Dist: 73.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142183,lon:-4.0654215,name:'15:47:43 Bearing: 41 Dist: 74.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142105,lon:-4.0654131,name:'15:47:44 Bearing: 41 Dist: 75.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142058,lon:-4.0654057,name:'15:47:45 Bearing: 41 Dist: 75.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142007,lon:-4.0653974,name:'15:47:46 Bearing: 40 Dist: 75.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141924,lon:-4.0653884,name:'15:47:47 Bearing: 40 Dist: 76.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141856,lon:-4.0653811,name:'15:47:48 Bearing: 40 Dist: 77.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141824,lon:-4.0653759,name:'15:47:50 Bearing: 40 Dist: 77.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141774,lon:-4.0653699,name:'15:47:51 Bearing: 40 Dist: 77.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141713,lon:-4.0653628,name:'15:47:52 Bearing: 39 Dist: 78.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141666,lon:-4.0653571,name:'15:47:53 Bearing: 39 Dist: 79.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141652,lon:-4.0653546,name:'15:47:54 Bearing: 39 Dist: 79.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141634,lon:-4.0653513,name:'15:47:55 Bearing: 39 Dist: 79.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141702,lon:-4.0653631,name:'15:47:56 Bearing: 39 Dist: 78.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141699,lon:-4.0653666,name:'15:47:57 Bearing: 40 Dist: 78.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141706,lon:-4.0653722,name:'15:47:58 Bearing: 40 Dist: 78.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142020,lon:-4.0653324,name:'15:47:59 Bearing: 39 Dist: 74.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142623,lon:-4.0652543,name:'15:48:00 Bearing: 38 Dist: 67.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143141,lon:-4.0651494,name:'15:48:01 Bearing: 35 Dist: 61.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142857,lon:-4.0651551,name:'15:48:02 Bearing: 35 Dist: 64.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142749,lon:-4.0651574,name:'15:48:03 Bearing: 35 Dist: 65.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142715,lon:-4.0651719,name:'15:48:04 Bearing: 35 Dist: 65.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142623,lon:-4.0651754,name:'15:48:05 Bearing: 35 Dist: 66.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142560,lon:-4.0651853,name:'15:48:06 Bearing: 36 Dist: 67.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142501,lon:-4.0652017,name:'15:48:07 Bearing: 36 Dist: 68.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142460,lon:-4.0652111,name:'15:48:08 Bearing: 36 Dist: 68.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142394,lon:-4.0652194,name:'15:48:09 Bearing: 37 Dist: 69.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142309,lon:-4.0652238,name:'15:48:10 Bearing: 37 Dist: 70.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142236,lon:-4.0652288,name:'15:48:11 Bearing: 37 Dist: 71.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142142,lon:-4.0652330,name:'15:48:12 Bearing: 37 Dist: 72.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142096,lon:-4.0652409,name:'15:48:13 Bearing: 37 Dist: 73.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142039,lon:-4.0652470,name:'15:48:14 Bearing: 37 Dist: 73.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141970,lon:-4.0652502,name:'15:48:15 Bearing: 37 Dist: 74.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141901,lon:-4.0652541,name:'15:48:16 Bearing: 37 Dist: 75.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141772,lon:-4.0652548,name:'15:48:17 Bearing: 37 Dist: 76.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141735,lon:-4.0652572,name:'15:48:18 Bearing: 37 Dist: 77.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141706,lon:-4.0652595,name:'15:48:19 Bearing: 37 Dist: 77.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141704,lon:-4.0652556,name:'15:48:20 Bearing: 37 Dist: 77.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141532,lon:-4.0652192,name:'15:48:21 Bearing: 36 Dist: 79.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141286,lon:-4.0651863,name:'15:48:22 Bearing: 36 Dist: 81.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141353,lon:-4.0651925,name:'15:48:23 Bearing: 36 Dist: 81.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141347,lon:-4.0651927,name:'15:48:24 Bearing: 36 Dist: 81.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141327,lon:-4.0651778,name:'15:48:25 Bearing: 35 Dist: 81.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141318,lon:-4.0651764,name:'15:48:26 Bearing: 35 Dist: 81.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141300,lon:-4.0651753,name:'15:48:27 Bearing: 35 Dist: 81.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141283,lon:-4.0651727,name:'15:48:28 Bearing: 35 Dist: 81.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141314,lon:-4.0651692,name:'15:48:29 Bearing: 35 Dist: 81.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141333,lon:-4.0651705,name:'15:48:30 Bearing: 35 Dist: 81.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141329,lon:-4.0651710,name:'15:48:31 Bearing: 35 Dist: 81.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141348,lon:-4.0651602,name:'15:48:32 Bearing: 35 Dist: 81.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141410,lon:-4.0651604,name:'15:48:33 Bearing: 35 Dist: 80.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141467,lon:-4.0651678,name:'15:48:34 Bearing: 35 Dist: 79.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141436,lon:-4.0651682,name:'15:48:35 Bearing: 35 Dist: 80.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141418,lon:-4.0651704,name:'15:48:36 Bearing: 35 Dist: 80.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141437,lon:-4.0651754,name:'15:48:37 Bearing: 35 Dist: 80.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141460,lon:-4.0651699,name:'15:48:38 Bearing: 35 Dist: 79.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141472,lon:-4.0651691,name:'15:48:39 Bearing: 35 Dist: 79.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141475,lon:-4.0651707,name:'15:48:40 Bearing: 35 Dist: 79.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141344,lon:-4.0651601,name:'15:48:41 Bearing: 35 Dist: 81.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141315,lon:-4.0651532,name:'15:48:42 Bearing: 35 Dist: 81.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141358,lon:-4.0651571,name:'15:48:43 Bearing: 35 Dist: 81.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141362,lon:-4.0651582,name:'15:48:44 Bearing: 35 Dist: 80.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141265,lon:-4.0651435,name:'15:48:45 Bearing: 35 Dist: 82.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141231,lon:-4.0651328,name:'15:48:46 Bearing: 34 Dist: 82.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141251,lon:-4.0651292,name:'15:48:47 Bearing: 34 Dist: 82.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141253,lon:-4.0651226,name:'15:48:48 Bearing: 34 Dist: 82.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141292,lon:-4.0651213,name:'15:48:49 Bearing: 34 Dist: 81.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141284,lon:-4.0651159,name:'15:48:50 Bearing: 34 Dist: 81.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141346,lon:-4.0651174,name:'15:48:51 Bearing: 34 Dist: 81.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141505,lon:-4.0651439,name:'15:48:52 Bearing: 35 Dist: 79.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141603,lon:-4.0651686,name:'15:48:53 Bearing: 35 Dist: 78.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141774,lon:-4.0652156,name:'15:48:54 Bearing: 36 Dist: 76.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141710,lon:-4.0652437,name:'15:48:55 Bearing: 37 Dist: 77.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141685,lon:-4.0652492,name:'15:48:56 Bearing: 37 Dist: 77.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141625,lon:-4.0652516,name:'15:48:57 Bearing: 37 Dist: 78.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141592,lon:-4.0652550,name:'15:48:58 Bearing: 37 Dist: 78.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141550,lon:-4.0652529,name:'15:48:59 Bearing: 37 Dist: 79.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141453,lon:-4.0652438,name:'15:49:00 Bearing: 37 Dist: 80.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141399,lon:-4.0652294,name:'15:49:01 Bearing: 36 Dist: 80.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141432,lon:-4.0652221,name:'15:49:02 Bearing: 36 Dist: 80.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141449,lon:-4.0652229,name:'15:49:03 Bearing: 36 Dist: 80.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141493,lon:-4.0652225,name:'15:49:04 Bearing: 36 Dist: 79.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141547,lon:-4.0652145,name:'15:49:05 Bearing: 36 Dist: 79.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141544,lon:-4.0652024,name:'15:49:06 Bearing: 36 Dist: 79.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141594,lon:-4.0651945,name:'15:49:07 Bearing: 36 Dist: 78.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141678,lon:-4.0651918,name:'15:49:08 Bearing: 36 Dist: 77.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141712,lon:-4.0651865,name:'15:49:09 Bearing: 36 Dist: 77.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141791,lon:-4.0651811,name:'15:49:10 Bearing: 35 Dist: 76.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4141911,lon:-4.0651847,name:'15:49:11 Bearing: 36 Dist: 74.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142029,lon:-4.0651890,name:'15:49:12 Bearing: 36 Dist: 73.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142089,lon:-4.0651844,name:'15:49:13 Bearing: 36 Dist: 72.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142131,lon:-4.0651770,name:'15:49:14 Bearing: 35 Dist: 72.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142155,lon:-4.0651698,name:'15:49:15 Bearing: 35 Dist: 72.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142149,lon:-4.0651590,name:'15:49:16 Bearing: 35 Dist: 72.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142225,lon:-4.0651589,name:'15:49:17 Bearing: 35 Dist: 71.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142286,lon:-4.0651573,name:'15:49:19 Bearing: 35 Dist: 70.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142372,lon:-4.0651576,name:'15:49:20 Bearing: 35 Dist: 69.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142440,lon:-4.0651562,name:'15:49:21 Bearing: 35 Dist: 68.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142537,lon:-4.0651592,name:'15:49:22 Bearing: 35 Dist: 67.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142592,lon:-4.0651575,name:'15:49:23 Bearing: 35 Dist: 67.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142650,lon:-4.0651547,name:'15:49:24 Bearing: 35 Dist: 66.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142732,lon:-4.0651546,name:'15:49:25 Bearing: 35 Dist: 65.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142777,lon:-4.0651499,name:'15:49:26 Bearing: 35 Dist: 65.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142831,lon:-4.0651497,name:'15:49:27 Bearing: 35 Dist: 64.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142889,lon:-4.0651448,name:'15:49:28 Bearing: 35 Dist: 63.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142877,lon:-4.0651357,name:'15:49:29 Bearing: 34 Dist: 64.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142999,lon:-4.0651582,name:'15:49:30 Bearing: 35 Dist: 62.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143087,lon:-4.0651740,name:'15:49:31 Bearing: 36 Dist: 61.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143129,lon:-4.0651732,name:'15:49:32 Bearing: 35 Dist: 61.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142969,lon:-4.0651327,name:'15:49:33 Bearing: 34 Dist: 63.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142763,lon:-4.0650949,name:'15:49:34 Bearing: 33 Dist: 65.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142750,lon:-4.0650782,name:'15:49:35 Bearing: 33 Dist: 65.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142793,lon:-4.0650703,name:'15:49:36 Bearing: 33 Dist: 65.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142912,lon:-4.0650758,name:'15:49:37 Bearing: 33 Dist: 63.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4142995,lon:-4.0650829,name:'15:49:38 Bearing: 33 Dist: 62.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143035,lon:-4.0650768,name:'15:49:39 Bearing: 33 Dist: 62.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143077,lon:-4.0650653,name:'15:49:40 Bearing: 32 Dist: 62.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143209,lon:-4.0650702,name:'15:49:41 Bearing: 32 Dist: 60.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143299,lon:-4.0650694,name:'15:49:42 Bearing: 32 Dist: 59.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143401,lon:-4.0650725,name:'15:49:43 Bearing: 32 Dist: 58.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143483,lon:-4.0650726,name:'15:49:44 Bearing: 32 Dist: 57.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143556,lon:-4.0650701,name:'15:49:45 Bearing: 32 Dist: 56.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143635,lon:-4.0650683,name:'15:49:46 Bearing: 32 Dist: 55.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143721,lon:-4.0650671,name:'15:49:47 Bearing: 32 Dist: 54.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143791,lon:-4.0650636,name:'15:49:48 Bearing: 32 Dist: 54.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143854,lon:-4.0650533,name:'15:49:49 Bearing: 32 Dist: 53.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143917,lon:-4.0650497,name:'15:49:50 Bearing: 31 Dist: 52.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4143997,lon:-4.0650476,name:'15:49:51 Bearing: 31 Dist: 52.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144066,lon:-4.0650442,name:'15:49:52 Bearing: 31 Dist: 51.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144119,lon:-4.0650381,name:'15:49:53 Bearing: 31 Dist: 50.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144194,lon:-4.0650333,name:'15:49:54 Bearing: 30 Dist: 49.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144317,lon:-4.0650163,name:'15:49:55 Bearing: 30 Dist: 48.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144367,lon:-4.0650085,name:'15:49:56 Bearing: 29 Dist: 48.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144391,lon:-4.0650034,name:'15:49:57 Bearing: 29 Dist: 48.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144463,lon:-4.0650034,name:'15:49:58 Bearing: 29 Dist: 47.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144540,lon:-4.0650046,name:'15:49:59 Bearing: 29 Dist: 46.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144585,lon:-4.0650010,name:'15:50:00 Bearing: 29 Dist: 46.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144652,lon:-4.0649990,name:'15:50:01 Bearing: 28 Dist: 45.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144693,lon:-4.0649950,name:'15:50:02 Bearing: 28 Dist: 44.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144752,lon:-4.0649944,name:'15:50:03 Bearing: 28 Dist: 44.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144815,lon:-4.0649927,name:'15:50:04 Bearing: 28 Dist: 43.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144876,lon:-4.0649923,name:'15:50:05 Bearing: 28 Dist: 43.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4144928,lon:-4.0649918,name:'15:50:06 Bearing: 28 Dist: 42.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145000,lon:-4.0649906,name:'15:50:07 Bearing: 27 Dist: 41.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145091,lon:-4.0649795,name:'15:50:08 Bearing: 26 Dist: 40.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145166,lon:-4.0649750,name:'15:50:09 Bearing: 26 Dist: 40.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145232,lon:-4.0649699,name:'15:50:10 Bearing: 26 Dist: 39.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145259,lon:-4.0649603,name:'15:50:11 Bearing: 25 Dist: 39.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145253,lon:-4.0649542,name:'15:50:12 Bearing: 25 Dist: 39.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145266,lon:-4.0649462,name:'15:50:13 Bearing: 24 Dist: 39.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145333,lon:-4.0649400,name:'15:50:14 Bearing: 23 Dist: 39.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145403,lon:-4.0649384,name:'15:50:15 Bearing: 23 Dist: 38.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145480,lon:-4.0649361,name:'15:50:16 Bearing: 23 Dist: 37.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145538,lon:-4.0649389,name:'15:50:17 Bearing: 22 Dist: 37.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145573,lon:-4.0649395,name:'15:50:18 Bearing: 22 Dist: 36.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145602,lon:-4.0649367,name:'15:50:19 Bearing: 22 Dist: 36.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145670,lon:-4.0649402,name:'15:50:20 Bearing: 22 Dist: 35.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145730,lon:-4.0649464,name:'15:50:21 Bearing: 22 Dist: 34.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145810,lon:-4.0649545,name:'15:50:22 Bearing: 22 Dist: 33.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145909,lon:-4.0649559,name:'15:50:23 Bearing: 22 Dist: 32.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4145982,lon:-4.0649562,name:'15:50:24 Bearing: 22 Dist: 32.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146034,lon:-4.0649539,name:'15:50:25 Bearing: 21 Dist: 31.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146105,lon:-4.0649518,name:'15:50:26 Bearing: 21 Dist: 30.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146153,lon:-4.0649549,name:'15:50:27 Bearing: 21 Dist: 30.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146204,lon:-4.0649598,name:'15:50:28 Bearing: 21 Dist: 29.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146256,lon:-4.0649594,name:'15:50:29 Bearing: 20 Dist: 29.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146335,lon:-4.0649615,name:'15:50:30 Bearing: 20 Dist: 28.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146372,lon:-4.0649612,name:'15:50:31 Bearing: 20 Dist: 27.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146383,lon:-4.0649593,name:'15:50:32 Bearing: 19 Dist: 27.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146377,lon:-4.0649496,name:'15:50:33 Bearing: 19 Dist: 28.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146397,lon:-4.0649444,name:'15:50:34 Bearing: 18 Dist: 28.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146443,lon:-4.0649448,name:'15:50:35 Bearing: 17 Dist: 27.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146486,lon:-4.0649497,name:'15:50:36 Bearing: 17 Dist: 27.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146516,lon:-4.0649472,name:'15:50:37 Bearing: 17 Dist: 26.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146536,lon:-4.0649468,name:'15:50:38 Bearing: 17 Dist: 26.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146558,lon:-4.0649448,name:'15:50:39 Bearing: 16 Dist: 26.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146582,lon:-4.0649398,name:'15:50:40 Bearing: 16 Dist: 26.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146655,lon:-4.0649410,name:'15:50:41 Bearing: 15 Dist: 25.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146674,lon:-4.0649386,name:'15:50:42 Bearing: 14 Dist: 25.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146634,lon:-4.0649411,name:'15:50:43 Bearing: 15 Dist: 26.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146610,lon:-4.0649410,name:'15:50:44 Bearing: 16 Dist: 26.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146567,lon:-4.0649358,name:'15:50:45 Bearing: 15 Dist: 26.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146550,lon:-4.0649331,name:'15:50:46 Bearing: 15 Dist: 27.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146546,lon:-4.0649329,name:'15:50:47 Bearing: 15 Dist: 27.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146549,lon:-4.0649299,name:'15:50:48 Bearing: 15 Dist: 27.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146646,lon:-4.0649302,name:'15:50:49 Bearing: 14 Dist: 26.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146677,lon:-4.0649370,name:'15:50:51 Bearing: 14 Dist: 25.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146690,lon:-4.0649315,name:'15:50:52 Bearing: 13 Dist: 25.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146701,lon:-4.0649349,name:'15:50:53 Bearing: 14 Dist: 25.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146706,lon:-4.0649399,name:'15:50:54 Bearing: 14 Dist: 25.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146742,lon:-4.0649452,name:'15:50:55 Bearing: 14 Dist: 24.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146833,lon:-4.0649466,name:'15:50:56 Bearing: 13 Dist: 23.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146861,lon:-4.0649510,name:'15:50:57 Bearing: 14 Dist: 23.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146789,lon:-4.0649441,name:'15:50:58 Bearing: 14 Dist: 24.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146788,lon:-4.0649383,name:'15:50:59 Bearing: 13 Dist: 24.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146833,lon:-4.0649387,name:'15:51:00 Bearing: 12 Dist: 24.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146877,lon:-4.0649403,name:'15:51:01 Bearing: 12 Dist: 23.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4146976,lon:-4.0649428,name:'15:51:02 Bearing: 11 Dist: 22.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147001,lon:-4.0649412,name:'15:51:03 Bearing: 10 Dist: 22.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147043,lon:-4.0649421,name:'15:51:04 Bearing: 9 Dist: 22.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147070,lon:-4.0649441,name:'15:51:05 Bearing: 9 Dist: 21.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147109,lon:-4.0649452,name:'15:51:06 Bearing: 9 Dist: 21.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147125,lon:-4.0649437,name:'15:51:07 Bearing: 8 Dist: 21.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147176,lon:-4.0649445,name:'15:51:08 Bearing: 7 Dist: 20.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147209,lon:-4.0649438,name:'15:51:09 Bearing: 6 Dist: 20.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147227,lon:-4.0649424,name:'15:51:10 Bearing: 6 Dist: 20.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147273,lon:-4.0649422,name:'15:51:11 Bearing: 4 Dist: 20.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147298,lon:-4.0649429,name:'15:51:12 Bearing: 4 Dist: 19.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147329,lon:-4.0649441,name:'15:51:13 Bearing: 4 Dist: 19.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147363,lon:-4.0649472,name:'15:51:14 Bearing: 3 Dist: 19.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147403,lon:-4.0649497,name:'15:51:15 Bearing: 2 Dist: 18.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147460,lon:-4.0649530,name:'15:51:16 Bearing: 1 Dist: 18.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147508,lon:-4.0649542,name:'15:51:17 Bearing: 0 Dist: 17.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147575,lon:-4.0649567,name:'15:51:18 Bearing: 358 Dist: 17.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147644,lon:-4.0649599,name:'15:51:19 Bearing: 356 Dist: 16.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147650,lon:-4.0649616,name:'15:51:20 Bearing: 356 Dist: 16.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147661,lon:-4.0649624,name:'15:51:21 Bearing: 356 Dist: 16.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147661,lon:-4.0649635,name:'15:51:22 Bearing: 356 Dist: 16.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147683,lon:-4.0649645,name:'15:51:23 Bearing: 355 Dist: 15.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147660,lon:-4.0649612,name:'15:51:24 Bearing: 356 Dist: 16.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147641,lon:-4.0649597,name:'15:51:25 Bearing: 356 Dist: 16.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147654,lon:-4.0649598,name:'15:51:26 Bearing: 356 Dist: 16.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147649,lon:-4.0649618,name:'15:51:27 Bearing: 356 Dist: 16.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147609,lon:-4.0649623,name:'15:51:28 Bearing: 358 Dist: 16.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147568,lon:-4.0649617,name:'15:51:29 Bearing: 0 Dist: 16.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147520,lon:-4.0649611,name:'15:51:30 Bearing: 1 Dist: 17.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147472,lon:-4.0649622,name:'15:51:31 Bearing: 3 Dist: 17.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147470,lon:-4.0649630,name:'15:51:32 Bearing: 3 Dist: 17.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147508,lon:-4.0649664,name:'15:51:33 Bearing: 2 Dist: 17.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147559,lon:-4.0649710,name:'15:51:34 Bearing: 2 Dist: 16.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147615,lon:-4.0649766,name:'15:51:35 Bearing: 1 Dist: 15.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147651,lon:-4.0649797,name:'15:51:36 Bearing: 0 Dist: 15.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147683,lon:-4.0649817,name:'15:51:37 Bearing: 0 Dist: 15.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147697,lon:-4.0649853,name:'15:51:38 Bearing: 0 Dist: 14.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147748,lon:-4.0649881,name:'15:51:39 Bearing: 359 Dist: 14.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147792,lon:-4.0649908,name:'15:51:40 Bearing: 357 Dist: 13.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147807,lon:-4.0649935,name:'15:51:41 Bearing: 357 Dist: 13.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147804,lon:-4.0649950,name:'15:51:42 Bearing: 358 Dist: 13.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147792,lon:-4.0649955,name:'15:51:43 Bearing: 359 Dist: 13.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147714,lon:-4.0649902,name:'15:51:44 Bearing: 1 Dist: 14.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147713,lon:-4.0649901,name:'15:51:45 Bearing: 1 Dist: 14.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147739,lon:-4.0649903,name:'15:51:46 Bearing: 0 Dist: 14.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147765,lon:-4.0649945,name:'15:51:47 Bearing: 0 Dist: 13.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147745,lon:-4.0649921,name:'15:51:48 Bearing: 0 Dist: 14.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147731,lon:-4.0649878,name:'15:51:49 Bearing: 0 Dist: 14.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147724,lon:-4.0649814,name:'15:51:50 Bearing: 358 Dist: 14.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147722,lon:-4.0649729,name:'15:51:51 Bearing: 356 Dist: 15.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147729,lon:-4.0649699,name:'15:51:52 Bearing: 355 Dist: 15.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147787,lon:-4.0649724,name:'15:51:53 Bearing: 352 Dist: 14.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147867,lon:-4.0649787,name:'15:51:54 Bearing: 350 Dist: 13.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147920,lon:-4.0649848,name:'15:51:55 Bearing: 348 Dist: 13.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147894,lon:-4.0649783,name:'15:51:56 Bearing: 348 Dist: 13.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147881,lon:-4.0649751,name:'15:51:57 Bearing: 348 Dist: 13.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147933,lon:-4.0649832,name:'15:51:58 Bearing: 347 Dist: 13.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147936,lon:-4.0649858,name:'15:51:59 Bearing: 347 Dist: 12.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147923,lon:-4.0649862,name:'15:52:00 Bearing: 348 Dist: 13.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147950,lon:-4.0649861,name:'15:52:01 Bearing: 346 Dist: 12.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147998,lon:-4.0649875,name:'15:52:02 Bearing: 343 Dist: 12.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148029,lon:-4.0649888,name:'15:52:03 Bearing: 341 Dist: 12.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148040,lon:-4.0649909,name:'15:52:04 Bearing: 341 Dist: 12.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148057,lon:-4.0649945,name:'15:52:05 Bearing: 340 Dist: 11.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148170,lon:-4.0650093,name:'15:52:06 Bearing: 335 Dist: 10.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148214,lon:-4.0650085,name:'15:52:07 Bearing: 329 Dist: 9.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148261,lon:-4.0650126,name:'15:52:08 Bearing: 324 Dist: 9.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148264,lon:-4.0650110,name:'15:52:09 Bearing: 323 Dist: 9.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148274,lon:-4.0650110,name:'15:52:10 Bearing: 295 Dist: 9.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148294,lon:-4.0650175,name:'15:52:11 Bearing: 295 Dist: 9.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148315,lon:-4.0650178,name:'15:52:12 Bearing: 294 Dist: 8.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148326,lon:-4.0650170,name:'15:52:13 Bearing: 293 Dist: 8.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148324,lon:-4.0650158,name:'15:52:14 Bearing: 293 Dist: 8.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148312,lon:-4.0650154,name:'15:52:15 Bearing: 293 Dist: 9.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148299,lon:-4.0650179,name:'15:52:16 Bearing: 295 Dist: 8.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148278,lon:-4.0650184,name:'15:52:17 Bearing: 324 Dist: 9.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148285,lon:-4.0650198,name:'15:52:18 Bearing: 324 Dist: 8.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148284,lon:-4.0650196,name:'15:52:19 Bearing: 324 Dist: 8.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148301,lon:-4.0650187,name:'15:52:21 Bearing: 295 Dist: 8.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148301,lon:-4.0650173,name:'15:52:22 Bearing: 294 Dist: 9.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148270,lon:-4.0650128,name:'15:52:23 Bearing: 323 Dist: 9.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148219,lon:-4.0650077,name:'15:52:24 Bearing: 328 Dist: 9.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148187,lon:-4.0650065,name:'15:52:25 Bearing: 331 Dist: 10.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148152,lon:-4.0650066,name:'15:52:26 Bearing: 336 Dist: 10.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148128,lon:-4.0650064,name:'15:52:27 Bearing: 338 Dist: 10.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148113,lon:-4.0650086,name:'15:52:28 Bearing: 340 Dist: 10.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148093,lon:-4.0650102,name:'15:52:29 Bearing: 343 Dist: 10.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148078,lon:-4.0650125,name:'15:52:30 Bearing: 346 Dist: 10.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148114,lon:-4.0650153,name:'15:52:31 Bearing: 343 Dist: 10.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148122,lon:-4.0650167,name:'15:52:32 Bearing: 343 Dist: 10.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148118,lon:-4.0650204,name:'15:52:33 Bearing: 345 Dist: 9.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148124,lon:-4.0650246,name:'15:52:34 Bearing: 346 Dist: 9.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148123,lon:-4.0650243,name:'15:52:35 Bearing: 346 Dist: 9.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148139,lon:-4.0650217,name:'15:52:36 Bearing: 344 Dist: 9.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148136,lon:-4.0650191,name:'15:52:37 Bearing: 343 Dist: 9.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148135,lon:-4.0650192,name:'15:52:38 Bearing: 343 Dist: 9.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148142,lon:-4.0650210,name:'15:52:39 Bearing: 343 Dist: 9.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148130,lon:-4.0650209,name:'15:52:40 Bearing: 344 Dist: 9.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148095,lon:-4.0650194,name:'15:52:41 Bearing: 347 Dist: 10.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148106,lon:-4.0650198,name:'15:52:42 Bearing: 346 Dist: 9.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148095,lon:-4.0650208,name:'15:52:43 Bearing: 348 Dist: 9.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148105,lon:-4.0650256,name:'15:52:44 Bearing: 349 Dist: 9.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148100,lon:-4.0650284,name:'15:52:45 Bearing: 350 Dist: 9.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148115,lon:-4.0650324,name:'15:52:46 Bearing: 351 Dist: 9.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148130,lon:-4.0650354,name:'15:52:47 Bearing: 351 Dist: 8.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148155,lon:-4.0650386,name:'15:52:48 Bearing: 350 Dist: 8.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148197,lon:-4.0650406,name:'15:52:49 Bearing: 346 Dist: 8.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148224,lon:-4.0650409,name:'15:52:50 Bearing: 343 Dist: 8.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148205,lon:-4.0650414,name:'15:52:51 Bearing: 346 Dist: 8.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148151,lon:-4.0650409,name:'15:52:52 Bearing: 351 Dist: 8.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148133,lon:-4.0650415,name:'15:52:53 Bearing: 353 Dist: 8.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148097,lon:-4.0650319,name:'15:52:54 Bearing: 352 Dist: 9.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148055,lon:-4.0650235,name:'15:52:55 Bearing: 352 Dist: 10.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148059,lon:-4.0650202,name:'15:52:56 Bearing: 350 Dist: 10.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148045,lon:-4.0650170,name:'15:52:57 Bearing: 350 Dist: 10.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148053,lon:-4.0650123,name:'15:52:58 Bearing: 348 Dist: 10.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148125,lon:-4.0650175,name:'15:52:59 Bearing: 343 Dist: 9.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148186,lon:-4.0650232,name:'15:53:00 Bearing: 339 Dist: 9.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148121,lon:-4.0650275,name:'15:53:01 Bearing: 348 Dist: 9.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148081,lon:-4.0650354,name:'15:53:02 Bearing: 355 Dist: 9.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148203,lon:-4.0650265,name:'15:53:03 Bearing: 339 Dist: 8.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148260,lon:-4.0650289,name:'15:53:04 Bearing: 332 Dist: 8.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148253,lon:-4.0650196,name:'15:53:05 Bearing: 329 Dist: 9.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148224,lon:-4.0650069,name:'15:53:06 Bearing: 327 Dist: 10.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148052,lon:-4.0649845,name:'15:53:07 Bearing: 337 Dist: 12.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147980,lon:-4.0649731,name:'15:53:08 Bearing: 340 Dist: 13.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147847,lon:-4.0649737,name:'15:53:09 Bearing: 350 Dist: 14.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147798,lon:-4.0649759,name:'15:53:10 Bearing: 353 Dist: 14.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147780,lon:-4.0649647,name:'15:53:11 Bearing: 351 Dist: 15.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147800,lon:-4.0649674,name:'15:53:12 Bearing: 350 Dist: 14.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147866,lon:-4.0649700,name:'15:53:13 Bearing: 347 Dist: 14.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147844,lon:-4.0649723,name:'15:53:14 Bearing: 349 Dist: 14.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147827,lon:-4.0649724,name:'15:53:15 Bearing: 350 Dist: 14.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147790,lon:-4.0649674,name:'15:53:16 Bearing: 351 Dist: 14.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147766,lon:-4.0649632,name:'15:53:17 Bearing: 351 Dist: 15.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147789,lon:-4.0649615,name:'15:53:18 Bearing: 349 Dist: 15.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147830,lon:-4.0649605,name:'15:53:19 Bearing: 346 Dist: 15.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147857,lon:-4.0649598,name:'15:53:20 Bearing: 345 Dist: 14.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147891,lon:-4.0649623,name:'15:53:21 Bearing: 343 Dist: 14.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147904,lon:-4.0649623,name:'15:53:22 Bearing: 342 Dist: 14.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4147947,lon:-4.0649674,name:'15:53:23 Bearing: 340 Dist: 13.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148027,lon:-4.0649795,name:'15:53:24 Bearing: 338 Dist: 12.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148072,lon:-4.0649884,name:'15:53:25 Bearing: 337 Dist: 11.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148084,lon:-4.0649912,name:'15:53:26 Bearing: 337 Dist: 11.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148093,lon:-4.0649936,name:'15:53:27 Bearing: 337 Dist: 11.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148108,lon:-4.0649943,name:'15:53:28 Bearing: 335 Dist: 11.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148130,lon:-4.0649950,name:'15:53:29 Bearing: 333 Dist: 11.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148105,lon:-4.0649960,name:'15:53:30 Bearing: 336 Dist: 11.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148100,lon:-4.0649952,name:'15:53:31 Bearing: 337 Dist: 11.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148103,lon:-4.0649950,name:'15:53:32 Bearing: 336 Dist: 11.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148123,lon:-4.0649942,name:'15:53:33 Bearing: 334 Dist: 11.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148165,lon:-4.0649959,name:'15:53:34 Bearing: 330 Dist: 10.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148225,lon:-4.0650053,name:'15:53:35 Bearing: 326 Dist: 10.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148249,lon:-4.0650193,name:'15:53:36 Bearing: 329 Dist: 9.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148277,lon:-4.0650324,name:'15:53:37 Bearing: 331 Dist: 8.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148308,lon:-4.0650442,name:'15:53:38 Bearing: 333 Dist: 7.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148313,lon:-4.0650505,name:'15:53:39 Bearing: 336 Dist: 6.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148326,lon:-4.0650555,name:'15:53:40 Bearing: 337 Dist: 6.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148334,lon:-4.0650547,name:'15:53:41 Bearing: 335 Dist: 6.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148314,lon:-4.0650520,name:'15:53:43 Bearing: 337 Dist: 6.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148317,lon:-4.0650530,name:'15:53:44 Bearing: 337 Dist: 6.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148343,lon:-4.0650573,name:'15:53:45 Bearing: 335 Dist: 6.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148361,lon:-4.0650621,name:'15:53:46 Bearing: 335 Dist: 6.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148437,lon:-4.0650698,name:'15:53:47 Bearing: 324 Dist: 5.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148527,lon:-4.0650627,name:'15:53:48 Bearing: 283 Dist: 5.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148563,lon:-4.0650579,name:'15:53:49 Bearing: 278 Dist: 5.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148501,lon:-4.0650510,name:'15:53:50 Bearing: 284 Dist: 6.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148432,lon:-4.0650461,name:'15:53:51 Bearing: 290 Dist: 6.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148408,lon:-4.0650318,name:'15:53:52 Bearing: 289 Dist: 7.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148429,lon:-4.0650283,name:'15:53:53 Bearing: 287 Dist: 7.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148438,lon:-4.0650320,name:'15:53:54 Bearing: 287 Dist: 7.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148428,lon:-4.0650369,name:'15:53:55 Bearing: 289 Dist: 7.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148399,lon:-4.0650440,name:'15:53:56 Bearing: 292 Dist: 6.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148343,lon:-4.0650404,name:'15:53:57 Bearing: 325 Dist: 7.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148294,lon:-4.0650316,name:'15:53:58 Bearing: 328 Dist: 8.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148264,lon:-4.0650239,name:'15:53:59 Bearing: 329 Dist: 8.7',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148252,lon:-4.0650267,name:'15:54:00 Bearing: 332 Dist: 8.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148238,lon:-4.0650287,name:'15:54:01 Bearing: 335 Dist: 8.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148241,lon:-4.0650285,name:'15:54:02 Bearing: 335 Dist: 8.6',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148251,lon:-4.0650293,name:'15:54:03 Bearing: 334 Dist: 8.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148282,lon:-4.0650327,name:'15:54:04 Bearing: 331 Dist: 8.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148332,lon:-4.0650389,name:'15:54:05 Bearing: 326 Dist: 7.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148368,lon:-4.0650425,name:'15:54:06 Bearing: 295 Dist: 7.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148405,lon:-4.0650445,name:'15:54:07 Bearing: 292 Dist: 6.8',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148453,lon:-4.0650477,name:'15:54:08 Bearing: 288 Dist: 6.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148562,lon:-4.0650570,name:'15:54:09 Bearing: 278 Dist: 5.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148623,lon:-4.0650574,name:'15:54:10 Bearing: 271 Dist: 5.4',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148733,lon:-4.0650612,name:'15:54:11 Bearing: 258 Dist: 5.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148831,lon:-4.0650685,name:'15:54:12 Bearing: 245 Dist: 5.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148913,lon:-4.0650807,name:'15:54:13 Bearing: 231 Dist: 4.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148969,lon:-4.0650873,name:'15:54:14 Bearing: 222 Dist: 5.0',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149019,lon:-4.0650952,name:'15:54:15 Bearing: 213 Dist: 5.1',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149046,lon:-4.0650966,name:'15:54:16 Bearing: 211 Dist: 5.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149065,lon:-4.0651016,name:'15:54:17 Bearing: 206 Dist: 5.3',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149076,lon:-4.0651102,name:'15:54:18 Bearing: 200 Dist: 5.2',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149100,lon:-4.0651069,name:'15:54:19 Bearing: 201 Dist: 5.5',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4149046,lon:-4.0651093,name:'15:54:20 Bearing: 202 Dist: 4.9',desc:'',color:'',icon:''});
+				GV_Draw_Marker({lat:52.4148982,lon:-4.0651141,name:'15:54:21 Bearing: 202 Dist: 4.1',desc:'',color:'',icon:''});
+				
+				
+				GV_Finish_Map();
+					
+			  
+			}
+			GV_Map(); // execute the above code
+			// http://www.gpsvisualizer.com/map_input?form=google
+		</script>
+		
+		
+		
+	</body>
+
+</html>
